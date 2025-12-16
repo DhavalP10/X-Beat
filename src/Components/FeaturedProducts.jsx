@@ -1,52 +1,65 @@
+import React from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay, EffectCoverflow } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/effect-coverflow";
+import "./swiperCustom.css"; // for red dots
+
 function FeaturedProducts() {
+  const products = [
+    { name: "boAt Rockerz 518", img: "/products/boat518-1.png", price: "₹1,299", oldPrice: "₹3,990" },
+    { name: "JBL Tune 760NC", img: "/products/jbl760nc-1.png", price: "₹5,999", oldPrice: "₹7,999" },
+    { name: "boAt Rockerz 255", img: "/products/boat255r-1.png", price: "₹899", oldPrice: "₹2,990" },
+    { name: "JBL Endurance Run", img: "/products/jbl-endu-1.png", price: "₹999", oldPrice: "₹1,599" },
+    { name: "boAt Airdopes 203", img: "/products/boat203-1.png", price: "₹1,074", oldPrice: "₹3,999" },
+  ];
 
   return (
-    <>
-      <h1 className="bg-[#121212] text-center text-[#a9afc3] font-bold text-2xl">Featured Products</h1>
-<div className="grid grid-cols-5 pl-4 bg-[#121212]">
-<div className="h-80 w-60 mt-10 bg-[#121212]">
-  <h1 className="text-gray-300 text-center">boAt Rockerz 518</h1>
-  <img src="/products/boat518-1.png" alt="img" className="mt-5"/>
-  <div className="flex justify-center gap-3 mt-2">
-    <h2 className="font-bold text-white">₹1,299</h2>
-    <h2 className="font-bold line-through text-gray-500">₹3,990</h2>
-  </div>
-</div>
-<div className="h-80 w-60 mt-10 bg-[#121212]">
-  <h1 className="text-gray-300 text-center">JBL Tune 760NC</h1>
-  <img src="/products/jbl760nc-1.png" alt="img" className="mt-5"/>
-  <div className="flex justify-center gap-3 mt-2">
-    <h2 className="font-bold text-white">₹5,999</h2>
-    <h2 className="font-bold line-through text-gray-500">₹7,999</h2>
-  </div>
-</div>
-<div className="h-80 w-60 mt-10 bg-[#121212]">
-  <h1 className="text-gray-300 text-center">boAt Airdopes 203</h1>
-  <img src="/products/boat203-1.png" alt="img" className="mt-5"/>
-  <div className="flex justify-center gap-3 mt-2">
-    <h2 className="font-bold text-white">₹1,074</h2>
-    <h2 className="font-bold line-through text-gray-500">₹3,999</h2>
-  </div>
-</div>
-<div className="h-80 w-60 mt-10 bg-[#121212]">
-  <h1 className="text-gray-300 text-center">boAt Rockerz 255</h1>
-  <img src="/products/boat255r-1.png" alt="img" className="mt-5"/>
-  <div className="flex justify-center gap-3 mt-2">
-    <h2 className="font-bold text-white">₹899</h2>
-    <h2 className="font-bold line-through text-gray-500">₹2,990</h2>
-  </div>
-</div>
-<div className="h-80 w-60 mt-10 bg-[#121212]">
-  <h1 className="text-gray-300 text-center">JBL Endurance Run Sports</h1>
-  <img src="/products/jbl-endu-1.png" alt="img" className="mt-5"/>
-  <div className="flex justify-center gap-3 mt-2">
-    <h2 className="font-bold text-white">₹999</h2>
-    <h2 className="font-bold line-through text-gray-500">₹1,599</h2>
-  </div>
-</div>
-</div>
-    </>
-  )
+    <div className="bg-[#121212] py-10">
+      <p className="text-3xl text-gray-400 text-center font-bold mb-10">
+        Featured Products
+      </p>
+
+      <Swiper
+        modules={[Pagination, Autoplay, EffectCoverflow]}
+        effect="coverflow"
+        grabCursor={true}
+        centeredSlides={true}
+        slidesPerView={3}
+        loop={true}
+        coverflowEffect={{
+          rotate: 0,
+          stretch: 0,
+          depth: 100,
+          modifier: 2,
+          slideShadows: false,
+        }}
+        pagination={{ clickable: true }}
+        autoplay={{ delay: 2500 }}
+        spaceBetween={40}
+        className="featured-swiper"
+      >
+        {products.map((product, index) => (
+          <SwiperSlide key={index}>
+            <div className="text-center text-gray-400">
+              <p className="text-lg font-semibold mb-4">{product.name}</p>
+              <img
+                src={product.img}
+                className="h-80 w-80 object-contain mx-auto cursor-pointer transition-transform duration-500"
+              />
+              <div className="flex justify-center gap-6 mt-4">
+                <p className="text-gray-400 font-bold text-2xl">{product.price}</p>
+                <p className="text-gray-400 font-bold text-2xl pb-15 line-through">
+                  {product.oldPrice}
+                </p>
+              </div>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </div>
+  );
 }
 
-export default FeaturedProducts
+export default FeaturedProducts;

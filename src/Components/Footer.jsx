@@ -56,7 +56,7 @@ function Footer() {
         <div className="pt-10 ml-20">
           <h1 className="text-gray-400 text-2xl font-bold required:">X-Beat</h1>
           <p className="text-gray-400">Subscribe to our Email alerts to receive <br /> early discount offers, and new products info.</p>
-          <input type="text" placeholder="Email Address*" className="mt-3 pr-8 py-2 text-gray-400 border rounded-xl" /><br />
+          <input type="text" placeholder="Email Address*" className="mt-3 pr-20 py-2 text-gray-400 border rounded-xl" /><br />
           <button class="w-40 mt-3 bg-red-700 hover:bg-red-600 cursor-pointer text-white py-2 rounded-lg font-medium transition">
       Subscribe
     </button>
@@ -65,33 +65,33 @@ function Footer() {
         <div>
           <h4 className="mt-10 text-[#A9AFC3] font-bold text-2xl">Help</h4>
           <ul className="mt-4 text-gray-400">
-            <li className="mt-2">FAQs</li>
-            <li className="mt-2">Track Order</li>
-            <li className="mt-2">Cancel Order</li>
-            <li className="mt-2">Return Order</li>
-            <li className="mt-2">Warranty Info</li>
+            <li className="mt-2 cursor-pointer hover:text-white">FAQs</li>
+            <li className="mt-2 cursor-pointer hover:text-white">Track Order</li>
+            <li className="mt-2 cursor-pointer hover:text-white">Cancel Order</li>
+            <li className="mt-2 cursor-pointer hover:text-white">Return Order</li>
+            <li className="mt-2 cursor-pointer hover:text-white">Warranty Info</li>
           </ul>
         </div>
 
           <div>
           <h4 className="mt-10 text-[#A9AFC3] font-bold text-2xl">Policies</h4>
           <ul className="mt-4 text-gray-400">
-            <li className="mt-2">Return Policy</li>
-            <li className="mt-2">Security</li>
-            <li className="mt-2">Sitemap</li>
-            <li className="mt-2">Privacy Policy</li>
-            <li className="mt-2">Terms & Conditions</li>
+            <li className="mt-2 cursor-pointer hover:text-white">Return Policy</li>
+            <li className="mt-2 cursor-pointer hover:text-white">Security</li>
+            <li className="mt-2 cursor-pointer hover:text-white">Sitemap</li>
+            <li className="mt-2 cursor-pointer hover:text-white">Privacy Policy</li>
+            <li className="mt-2 cursor-pointer hover:text-white">Terms & Conditions</li>
           </ul>
         </div>
 
         <div>
           <h4 className="mt-10 text-[#A9AFC3] font-bold text-2xl">Company</h4>
           <ul className="mt-4 text-gray-400">
-            <li className="mt-2">About Us</li>
-            <li className="mt-2">COntact Us</li>
-            <li className="mt-2">Service Centres</li>
-            <li className="mt-2">Careers</li>
-            <li className="mt-2">Affiliates</li>
+            <li className="mt-2 cursor-pointer hover:text-white">About Us</li>
+            <li className="mt-2 cursor-pointer hover:text-white">Contact Us</li>
+            <li className="mt-2 cursor-pointer hover:text-white">Service Centres</li>
+            <li className="mt-2 cursor-pointer hover:text-white">Careers</li>
+            <li className="mt-2 cursor-pointer hover:text-white">Affiliates</li>
           </ul>
         </div>
       </div >

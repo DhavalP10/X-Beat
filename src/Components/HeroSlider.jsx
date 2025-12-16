@@ -51,7 +51,7 @@ function HeroSlider() {
         {slides.map((item, index) => (
           <div
             key={index}
-            className="min-w-full h-screen flex items-center px-20 relative text-gray-300"
+            className="min-w-full h-screen flex items-center px-50 relative text-gray-300"
           >
             {/* Background Big Text */}
             <h1 className="absolute left-10 top-1/2 -translate-y-1/2 text-[200px] font-bold text-[#1a1a1a] select-none"> 
@@ -81,7 +81,7 @@ function HeroSlider() {
               <img
                 src={item.img}
                 alt="product"
-                className="w-[500px] object-cover"
+                className="w-[550px] object-cover"
               />
             </div>
           </div>

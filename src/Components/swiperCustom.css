@@ -1,0 +1,15 @@
+.swiper-slide-active img {
+  transform: scale(1.1);
+  transition: transform 0.5s;
+}
+/* Make pagination bullets red */
+.featured-swiper .swiper-pagination-bullet {
+  background-color: gray;
+  
+  opacity: 0.5;
+}
+
+.featured-swiper .swiper-pagination-bullet-active {
+  background-color: red;
+  opacity: 1;
+}

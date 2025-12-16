@@ -2,25 +2,24 @@ import { useState } from 'react'
 import './App.css'
 import Home from './Components/Home'
 import FeaturedProducts from './Components/FeaturedProducts'
-import TopProducts from './Components/TopProducts'
+import TopProducts from './pages/TopProducts'
 import Footer from './Components/Footer'
-import ProductDetails from './Components/ProductDetails'
-import { Route, Routes } from 'react-router-dom'
+import Navbar from './Components/Navbar'
+import { Routes, Route} from "react-router-dom";
+// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// import ProductDetails from './pages/ProductDetails'
 
 function App() {
 
   return (
     <>
-  <Home/>
-  <FeaturedProducts/>
-  <TopProducts/>
+    <Navbar/>
+<Routes>
+  <Route path='/' element={<Home/>}/>
+  <Route path='/featuredproducts' element={<FeaturedProducts/>}/>
+  <Route path='/topproducts' element={<TopProducts/>}/>
+</Routes>
   <Footer/>
-  <ProductDetails/>
-  <Routes>
-    <Route path='/' element={<Home/>}/>
-    <Route path='/' element={<ProductDetails/>}/>
-
-  </Routes>
     </>
   )
 }
