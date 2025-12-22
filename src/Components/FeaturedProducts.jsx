@@ -3,8 +3,6 @@ import products from "../data/products"
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, EffectCoverflow } from "swiper/modules";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
-import { CartContext } from "./CartContext";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
@@ -12,7 +10,6 @@ import "./swiperCustom.css"; // for red dots
 
 function FeaturedProducts() {
   const featuredProducts = products.filter(p => p.f);
-  const { addToCart } = useContext(CartContext);
 
 
 
@@ -56,12 +53,6 @@ function FeaturedProducts() {
                   ₹{product.originalPrice.toLocaleString("en-IN")}
                 </p>
               </div>
-              <button
-                onClick={() => addToCart(product)}
-                className="mt-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
-              >
-                Add to Cart
-              </button>
             </div>
           </SwiperSlide>
         ))}

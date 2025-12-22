@@ -2,12 +2,15 @@
 import React, { useState } from "react";
 import productsData from "../data/products.js";
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { CartContext } from "../Components/CartContext";
 
 // chunkArray function here (same as yours)...
 
 function TopProduct() {
 const [activeCategory, setActiveCategory] = useState("All");
 const [showAll, setShowAll] = useState(false);
+const { addToCart } = useContext(CartContext);
 
   const filteredProducts =
   activeCategory === "All"
@@ -122,7 +125,10 @@ const chunkArray = (array, size) => {
                     <p className="text-gray-400 font-semibold text-2xl line-through">₹{item.originalPrice.toLocaleString("en-IN")}</p>
                   </div>
 
-                  <button className="mt-4 bg-red-700 hover:bg-red-600 text-white px-25 py-2 rounded-md font-semibold duration-200 cursor-pointer ml-4">
+                  <button 
+                    onClick={() => addToCart(item)}
+                    className="mt-4 bg-red-700 hover:bg-red-600 text-white px-25 py-2 rounded-md font-semibold duration-200 cursor-pointer ml-4"
+                  >
                     Add to cart
                   </button>
                 </div>
