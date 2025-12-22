@@ -22,7 +22,7 @@ const chunkArray = (array, size) => {
   for (let i = 0; i < array.length; i += size) {
     result.push(array.slice(i, i + size));
   }
-  return result;
+  return result;  
 };
 
 
@@ -117,9 +117,9 @@ const chunkArray = (array, size) => {
 
                   <hr className="border-t border-gray-700 mt-3" />
 
-                  <div className="flex gap-1 items-center mt-3">
-                    <p className="text-gray-400 font-semibold text-3xl">₹{item.finalPrice}</p>
-                    <p className="text-gray-400 font-semibold text-2xl line-through">₹{item.originalPrice}</p>
+                  <div className="flex gap-4 items-center mt-3">
+                    <p className="text-gray-400 font-semibold text-3xl">₹{item.finalPrice.toLocaleString("en-IN")}</p>
+                    <p className="text-gray-400 font-semibold text-2xl line-through">₹{item.originalPrice.toLocaleString("en-IN")}</p>
                   </div>
 
                   <button className="mt-4 bg-red-700 hover:bg-red-600 text-white px-25 py-2 rounded-md font-semibold duration-200 cursor-pointer ml-4">

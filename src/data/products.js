@@ -22,6 +22,8 @@ const productsData = [
         ratings: 1234,
         rateCount: 5,
         path: "/product-details/",
+        f: false,
+        fh: true,
     },
     {
         id: 2,
@@ -44,6 +46,8 @@ const productsData = [
         ratings: 1321,
         rateCount: 5,
         path: "/product-details/",
+        f:true,
+        fh:false,
     },
     {
         id: 3,
@@ -68,6 +72,8 @@ const productsData = [
         ratings: 1244,
         rateCount: 5,
         path: "/product-details/",
+        f: false,
+        fh: true,
     },
     {
         id: 4,
@@ -89,6 +95,8 @@ const productsData = [
         ratings: 556,
         rateCount: 4,
         path: "/product-details/",
+        f: false,
+        fh: false,
     },
     {
         id: 5,
@@ -110,6 +118,8 @@ const productsData = [
         ratings: 1563,
         rateCount: 5,
         path: "/product-details/",
+        f: false,
+        fh: false,
     },
     {
         id: 6,
@@ -131,6 +141,8 @@ const productsData = [
         ratings: 836,
         rateCount: 4,
         path: "/product-details/",
+        f: false,
+        fh: false,
     },
     {
         id: 7,
@@ -155,6 +167,8 @@ const productsData = [
         ratings: 679,
         rateCount: 4,
         path: "/product-details/",
+        f: false,
+        fh: true,
     },
     {
         id: 8,
@@ -177,6 +191,8 @@ const productsData = [
         ratings: 755,
         rateCount: 4,
         path: "/product-details/",
+        f:true,
+        fh:false,
     },
     {
         id: 9,
@@ -199,6 +215,8 @@ const productsData = [
         ratings: 1464,
         rateCount: 5,
         path: "/product-details/",
+        f:true,
+        fh:false,
     },
     {
         id: 10,
@@ -220,6 +238,8 @@ const productsData = [
         ratings: 801,
         rateCount: 4,
         path: "/product-details/",
+        f:true,
+        fh:false,
     },
     {
         id: 11,
@@ -241,6 +261,8 @@ const productsData = [
         ratings: 382,
         rateCount: 3,
         path: "/product-details/",
+        f: false,
+        fh: false,
     },
     {
         id: 12,
@@ -262,6 +284,8 @@ const productsData = [
         ratings: 1178,
         rateCount: 5,
         path: "/product-details/",
+        f: false,
+        fh: false,
     },
     {
         id: 13,
@@ -284,6 +308,8 @@ const productsData = [
         ratings: 1144,
         rateCount: 5,
         path: "/product-details/",
+        f:true,
+        fh:false,
     },
     {
         id: 14,
@@ -306,6 +332,8 @@ const productsData = [
         ratings: 1340,
         rateCount: 5,
         path: "/product-details/",
+        f: false,
+        fh: false,
     },
     {
         id: 15,
@@ -327,6 +355,8 @@ const productsData = [
         ratings: 853,
         rateCount: 4,
         path: "/product-details/",
+        f: false,
+        fh: false,
     },
     {
         id: 16,
@@ -348,6 +378,8 @@ const productsData = [
         ratings: 364,
         rateCount: 4,
         path: "/product-details/",
+        f: false,
+        fh: false,
     },
     {
         id: 17,
@@ -369,6 +401,8 @@ const productsData = [
         ratings: 1011,
         rateCount: 5,
         path: "/product-details/",
+        f: false,
+        fh: false,
     },
     {
         id: 18,
@@ -390,6 +424,8 @@ const productsData = [
         ratings: 530,
         rateCount: 4,
         path: "/product-details/",
+        f: false,
+        fh: false,
     },
     {
         id: 19,
@@ -411,6 +447,8 @@ const productsData = [
         ratings: 474,
         rateCount: 4,
         path: "/product-details/",
+        f: false,
+        fh: false,
     },
 ];
 

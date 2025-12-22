@@ -1,19 +1,20 @@
 import React from "react";
+import products from "../data/products"
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, EffectCoverflow } from "swiper/modules";
+import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { CartContext } from "./CartContext";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
 import "./swiperCustom.css"; // for red dots
 
 function FeaturedProducts() {
-  const products = [
-    { name: "boAt Rockerz 518", img: "/products/boat518-1.png", price: "₹1,299", oldPrice: "₹3,990" },
-    { name: "JBL Tune 760NC", img: "/products/jbl760nc-1.png", price: "₹5,999", oldPrice: "₹7,999" },
-    { name: "boAt Rockerz 255", img: "/products/boat255r-1.png", price: "₹899", oldPrice: "₹2,990" },
-    { name: "JBL Endurance Run", img: "/products/jbl-endu-1.png", price: "₹999", oldPrice: "₹1,599" },
-    { name: "boAt Airdopes 203", img: "/products/boat203-1.png", price: "₹1,074", oldPrice: "₹3,999" },
-  ];
+  const featuredProducts = products.filter(p => p.f);
+  const { addToCart } = useContext(CartContext);
+
+
 
   return (
     <div className="bg-[#121212] py-10">
@@ -40,20 +41,27 @@ function FeaturedProducts() {
         spaceBetween={40}
         className="featured-swiper"
       >
-        {products.map((product, index) => (
+        {featuredProducts.map((product,index) => (
           <SwiperSlide key={index}>
             <div className="text-center text-gray-400">
               <p className="text-lg font-semibold mb-4">{product.name}</p>
+              <Link to={`/product-details/${product.id}`}>
               <img
-                src={product.img}
+                src={product.images[0]}
                 className="h-80 w-80 object-contain mx-auto cursor-pointer transition-transform duration-500"
-              />
+              /></Link>
               <div className="flex justify-center gap-6 mt-4">
-                <p className="text-gray-400 font-bold text-2xl">{product.price}</p>
+                <p className="text-gray-400 font-bold text-2xl">₹{product.finalPrice.toLocaleString("en-IN")}</p>
                 <p className="text-gray-400 font-bold text-2xl pb-15 line-through">
-                  {product.oldPrice}
+                  ₹{product.originalPrice.toLocaleString("en-IN")}
                 </p>
               </div>
+              <button
+                onClick={() => addToCart(product)}
+                className="mt-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md"
+              >
+                Add to Cart
+              </button>
             </div>
           </SwiperSlide>
         ))}

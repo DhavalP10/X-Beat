@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import products from "../data/products";
 
 function HeroSlider() {
   // ----- SLIDES DATA (USING YOUR EXACT CODE + IMAGES) -----
@@ -71,18 +73,23 @@ function HeroSlider() {
                 <p className="text-xl line-through text-gray-500">{item.oldPrice}</p>
               </div>
 
-              <button className="mt-8 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-md text-lg font-semibold duration-200">
+              <Link
+                to={`/product-details/${(products.find((p) => p.title === item.title) || { id: index + 1 }).id}`}
+                className="mt-8 inline-block bg-red-700 hover:bg-red-600 text-white px-6 py-3 rounded-md text-lg font-semibold duration-200"
+              >
                 Shop Now
-              </button>
+              </Link>
             </div>
 
             {/* Right Image */}
             <div className="ml-auto z-10">
-              <img
+              
+                <img
                 src={item.img}
                 alt="product"
                 className="w-[550px] object-cover"
               />
+             
             </div>
           </div>
         ))}
