@@ -10,6 +10,7 @@ import ProductDetails from "./pages/ProductDetails";
 import ScrollToTop from "./Components/ScrollToTop";
 import Cart from "./Components/Cart";
 import Notification from "./Components/Notification";
+import AllProducts from './pages/AllProducts'
 // import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 // import ProductDetails from './pages/ProductDetails'
 
@@ -27,6 +28,7 @@ function App() {
   <Route path='/productdetails' element={<ProductDetails/>}/>
   <Route path="/product-details/:id" element={<ProductDetails />} />
   <Route path="/cart" element={<Cart />} />
+  <Route path="/products" element={<AllProducts />} />
 </Routes>
   <Footer/>
     </>

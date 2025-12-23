@@ -137,8 +137,9 @@ const chunkArray = (array, size) => {
           ))}
          {/* Browse All Card */}
 {activeCategory === "All" && rowIndex === rows.length - 1 && !showAll && (
+  <Link to={"/products"}>
   <div
-    className="bg-[#161819] shadow-lg w-90 border border-gray-400 flex justify-center items-center cursor-pointer rounded-md"
+    className="bg-[#161819] shadow-lg w-90 border border-gray-400 flex justify-center items-center cursor-pointer rounded-md h-130"
     onClick={() => setShowAll(true)}  // **Add this onClick**
   >
     <div className="flex flex-col text-gray-400 text-3xl hover:text-gray-200 text-center py-20">
@@ -146,7 +147,9 @@ const chunkArray = (array, size) => {
       <h1>Products ➜</h1>
     </div>
   </div>
+  </Link>
 )}
+
 
 
         </div>
