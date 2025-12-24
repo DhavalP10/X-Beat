@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import productsData from '../data/products.js';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
 import { CartContext } from '../Components/CartContext';
+import { SearchContext } from '../Components/SearchContext';
 
 const AllProducts = () => {
   const [sortBy, setSortBy] = useState('Latest');
@@ -11,6 +11,7 @@ const AllProducts = () => {
   const [priceRange, setPriceRange] = useState(20000);
   const [filteredProducts, setFilteredProducts] = useState(productsData);
   const { addToCart } = useContext(CartContext);
+  const { searchTerm } = useContext(SearchContext);
 
   // Chunk array function
   const chunkArray = (array, size) => {
@@ -26,7 +27,12 @@ const AllProducts = () => {
       const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(product.brand);
       const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(product.category);
       const priceMatch = product.finalPrice <= priceRange;
-      return brandMatch && categoryMatch && priceMatch;
+      const searchMatch = searchTerm === '' || 
+        product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.info.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.category.toLowerCase().includes(searchTerm.toLowerCase());
+      return brandMatch && categoryMatch && priceMatch && searchMatch;
     });
 
     // Sort

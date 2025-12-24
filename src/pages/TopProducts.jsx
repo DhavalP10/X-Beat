@@ -139,7 +139,7 @@ const chunkArray = (array, size) => {
 {activeCategory === "All" && rowIndex === rows.length - 1 && !showAll && (
   <Link to={"/products"}>
   <div
-    className="bg-[#161819] shadow-lg w-90 border border-gray-400 flex justify-center items-center cursor-pointer rounded-md h-130"
+    className="bg-[#161819] shadow-lg w-90 border border-gray-400 flex justify-center items-center cursor-pointer rounded-md h-132"
     onClick={() => setShowAll(true)}  // **Add this onClick**
   >
     <div className="flex flex-col text-gray-400 text-3xl hover:text-gray-200 text-center py-20">

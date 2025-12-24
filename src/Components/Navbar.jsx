@@ -3,15 +3,19 @@ import { FaShoppingCart, FaSearch } from "react-icons/fa";
 import { IoPersonCircle } from "react-icons/io5";
 import { Link, useNavigate } from "react-router-dom";
 import { CartContext } from "./CartContext";
+import { SearchContext } from "./SearchContext";
+import LoginSignupModal from "./LoginSignupModal";
 
 const Navbar = () => {
   const { cartItems } = useContext(CartContext); // ✅ inside component
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const { searchTerm, setSearchTerm } = useContext(SearchContext);
 
   const [showSearch, setShowSearch] = useState(false);
   const searchRef = useRef(null);
   const [profileOpen, setProfileOpen] = useState(false);
   const profileRef = useRef(null);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,7 +32,7 @@ const Navbar = () => {
   }, [profileOpen, showSearch]);
 
   return (
-    <nav className="w-full bg-[#121212] text-gray-300 px-6 py-4 fixed top-0 left-0 flex items-center justify-between z-50">
+    <nav className="w-full bg-[#121212] text-gray-300 px-6 py-4 fixed top-0 left-0 flex items-center justify-between z-50 sm:w-full">
       <Link to="/">
         <h1 className="text-xl font-bold tracking-wide">X-Beat</h1>
       </Link>
@@ -38,7 +42,7 @@ const Navbar = () => {
         <div className="relative flex items-center">
           {!showSearch && (
             <FaSearch
-              className="text-xl hover:text-white cursor-pointer"
+              className="text-xl hover:text-white cursor-pointer sm:pr-10"
               onClick={() => setShowSearch(true)}
             />
           )}
@@ -49,14 +53,21 @@ const Navbar = () => {
                 type="text"
                 placeholder="Search..."
                 autoFocus
+                value={searchTerm}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setSearchTerm(value);
+                  navigate("/products");
+                }}
                 className="w-90 px-4 py-2 bg-[#1e1e1e] text-white border border-gray-600 rounded-md"
               />
               <button
                 onClick={() => {
                   setShowSearch(false);
+                  setSearchTerm("");
                   navigate("/");
                 }}
-                className="text-xl text-gray-400 hover:text-white"
+                className="text-xl text-gray-400 hover:text-white hover:cursor-pointer"
               >
                 ✕
               </button>
@@ -86,7 +97,13 @@ const Navbar = () => {
               <p className="text-sm text-gray-400 mb-4">
                 Access account and manage orders
               </p>
-              <button className="w-full border border-gray-500 py-2 rounded mb-4 hover:bg-gray-800">
+              <button
+                onClick={() => {
+                  setShowLoginModal(true);
+                  setProfileOpen(false);
+                }}
+                className="w-full border border-gray-500 py-2 rounded mb-4 hover:bg-gray-800"
+              >
                 Login / Signup
               </button>
               <ul className="space-y-2 text-gray-300">
@@ -100,6 +117,10 @@ const Navbar = () => {
           )}
         </div>
       </div>
+      <LoginSignupModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+      />
     </nav>
   );
 };

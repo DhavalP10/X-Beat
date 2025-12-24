@@ -5,6 +5,8 @@ export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
+  console.log("cart:",cartItems);
+  
   const [notification, setNotification] = useState(null);
 
   const addToCart = (product) => {

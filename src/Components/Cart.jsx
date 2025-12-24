@@ -1,7 +1,8 @@
 import { useContext } from "react";
 import { CartContext } from "./CartContext";
 import { Link } from "react-router-dom";
-import { TbShoppingCartExclamation, TbTrash, TbMinus, TbPlus } from "react-icons/tb";
+import { TbTrash, TbMinus, TbPlus } from "react-icons/tb";
+import { BsCartX } from "react-icons/bs";
 
 const Cart = () => {
   const { cartItems, increaseQuantity, decreaseQuantity, removeFromCart } = useContext(CartContext);
@@ -13,12 +14,12 @@ const Cart = () => {
     return (
       <div className="min-h-screen bg-[#121212] flex flex-col items-center justify-center text-center">
         <div className="relative mb-6 pt-10">
-          <TbShoppingCartExclamation className="text-red-600 text-[120px]" />
+          <BsCartX className="text-red-600 text-[120px]" />
         </div>
         <h2 className="text-gray-300 text-2xl font-semibold mb-6">
           Your Cart is Empty
         </h2>
-        <Link to="/">
+        <Link to="/products ">
           <button className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-md text-lg font-semibold transition-colors">
             Start Shopping
           </button>
