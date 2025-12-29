@@ -24,7 +24,11 @@ function FeaturedProducts() {
         effect="coverflow"
         grabCursor={true}
         centeredSlides={true}
-        slidesPerView={3}
+        slidesPerView={1}
+        breakpoints={{
+          640: { slidesPerView: 2 },
+          1024: { slidesPerView: 3 },
+        }}
         loop={true}
         coverflowEffect={{
           rotate: 0,
@@ -35,7 +39,7 @@ function FeaturedProducts() {
         }}
         pagination={{ clickable: true }}
         autoplay={{ delay: 2500 }}
-        spaceBetween={40}
+        spaceBetween={20}
         className="featured-swiper"
       >
         {featuredProducts.map((product,index) => (

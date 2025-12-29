@@ -10,61 +10,61 @@ function Footer() {
 
   return (
     <>
-    <div className="bg-black h-90">
-        <h1 className=" text-gray-400 font-bold text-center pt-24 text-3xl">Our Advantages</h1>
-        <div className="flex justify-around mt-20">
-        <div className="flex items-center gap-3">
+    <div className="bg-black py-10 md:py-20">
+        <h1 className=" text-gray-400 font-bold text-center pt-10 md:pt-24 text-2xl md:text-3xl">Our Advantages</h1>
+        <div className="flex flex-col md:flex-row justify-around mt-10 md:mt-20 px-4">
+        <div className="flex items-center gap-3 mb-6 md:mb-0">
         <span>
-          <FaTruckFast className="text-red-500 text-3xl"/>
+          <FaTruckFast className="text-red-500 text-2xl md:text-3xl"/>
         </span>
         <span>
-          <h1 className="text-gray-400 text-2xl">Express Delivery</h1>
-          <h3 className="text-gray-400">Ships in 24 Hours</h3>
+          <h1 className="text-gray-400 text-lg md:text-2xl">Express Delivery</h1>
+          <h3 className="text-gray-400 text-sm md:text-base">Ships in 24 Hours</h3>
+        </span>
+        </div>
+        <div className="flex items-center gap-3 mb-6 md:mb-0">
+        <span>
+          <IoShieldHalf className="text-red-500 text-2xl md:text-3xl"/>
+        </span>
+        <span>
+          <h1 className="text-gray-400 text-lg md:text-2xl">Brand Warranty</h1>
+          <h3 className="text-gray-400 text-sm md:text-base">100% Original products</h3>
+        </span>
+        </div>
+        <div className="flex items-center gap-3 mb-6 md:mb-0">
+        <span>
+          <IoIosPricetags className="text-red-500 text-xl md:text-2xl transform -rotate-12"/>
+        </span>
+        <span>
+          <h1 className="text-gray-400 text-lg md:text-2xl">Exciting Deals</h1>
+          <h3 className="text-gray-400 text-sm md:text-base">On all prepaid orders</h3>
         </span>
         </div>
         <div className="flex items-center gap-3">
         <span>
-          <IoShieldHalf className="text-red-500 text-3xl"/>
+          <FaCreditCard className="text-red-500 text-xl md:text-2xl"/>
         </span>
         <span>
-          <h1 className="text-gray-400 text-2xl">Brand Warranty</h1>
-          <h3 className="text-gray-400">100% Original products</h3>
-        </span>
-        </div>
-        <div className="flex items-center gap-3">
-        <span>
-          <IoIosPricetags className="text-red-500 text-2xl transform -rotate-12"/>
-        </span>
-        <span>
-          <h1 className="text-gray-400 text-2xl">Exciting Deals</h1>
-          <h3 className="text-gray-400">On all prepaid orders</h3>
-        </span>
-        </div>
-        <div className="flex items-center gap-3">
-        <span>
-          <FaCreditCard className="text-red-500 text-2xl"/>
-        </span>
-        <span>
-          <h1 className="text-gray-400 text-2xl">Secure Payments</h1>
-          <h3 className="text-gray-400">SSL / Secure сertificate</h3>
+          <h1 className="text-gray-400 text-lg md:text-2xl">Secure Payments</h1>
+          <h3 className="text-gray-400 text-sm md:text-base">SSL / Secure certificate</h3>
         </span>
         </div>
       </div>
       </div>
       <footer>
-      <div className="bg-black flex items-center justify-around pr-25">
-        <div className="pt-10 ml-20">
-          <h1 className="text-gray-400 text-2xl font-bold required:">X-Beat</h1>
-          <p className="text-gray-400">Subscribe to our Email alerts to receive <br /> early discount offers, and new products info.</p>
-          <input type="text" placeholder="Email Address*" className="mt-3 pr-20 py-2 text-gray-400 border rounded-xl" /><br />
-          <button class="w-40 mt-3 bg-red-700 hover:bg-red-600 cursor-pointer text-white py-2 rounded-lg font-medium transition">
+      <div className="bg-black grid grid-cols-1 md:grid-cols-4 gap-8 px-4 md:px-10 py-10">
+        <div>
+          <h1 className="text-gray-400 text-xl md:text-2xl font-bold">X-Beat</h1>
+          <p className="text-gray-400 mt-4 text-sm md:text-base">Subscribe to our Email alerts to receive <br /> early discount offers, and new products info.</p>
+          <input type="text" placeholder="Email Address*" className="mt-3 w-full md:w-auto pr-4 md:pr-20 py-2 text-gray-400 border rounded-xl" /><br />
+          <button className="w-full md:w-40 mt-3 bg-red-700 hover:bg-red-600 cursor-pointer text-white py-2 rounded-lg font-medium transition">
       Subscribe
     </button>
 
         </div>
         <div>
-          <h4 className="mt-10 text-[#A9AFC3] font-bold text-2xl">Help</h4>
-          <ul className="mt-4 text-gray-400">
+          <h4 className="text-[#A9AFC3] font-bold text-lg md:text-2xl">Help</h4>
+          <ul className="mt-4 text-gray-400 text-sm md:text-base">
             <li className="mt-2 cursor-pointer hover:text-white">FAQs</li>
             <li className="mt-2 cursor-pointer hover:text-white">Track Order</li>
             <li className="mt-2 cursor-pointer hover:text-white">Cancel Order</li>
@@ -74,8 +74,8 @@ function Footer() {
         </div>
 
           <div>
-          <h4 className="mt-10 text-[#A9AFC3] font-bold text-2xl">Policies</h4>
-          <ul className="mt-4 text-gray-400">
+          <h4 className="text-[#A9AFC3] font-bold text-lg md:text-2xl">Policies</h4>
+          <ul className="mt-4 text-gray-400 text-sm md:text-base">
             <li className="mt-2 cursor-pointer hover:text-white">Return Policy</li>
             <li className="mt-2 cursor-pointer hover:text-white">Security</li>
             <li className="mt-2 cursor-pointer hover:text-white">Sitemap</li>
@@ -85,8 +85,8 @@ function Footer() {
         </div>
 
         <div>
-          <h4 className="mt-10 text-[#A9AFC3] font-bold text-2xl">Company</h4>
-          <ul className="mt-4 text-gray-400">
+          <h4 className="text-[#A9AFC3] font-bold text-lg md:text-2xl">Company</h4>
+          <ul className="mt-4 text-gray-400 text-sm md:text-base">
             <li className="mt-2 cursor-pointer hover:text-white">About Us</li>
             <li className="mt-2 cursor-pointer hover:text-white">Contact Us</li>
             <li className="mt-2 cursor-pointer hover:text-white">Service Centres</li>
@@ -95,11 +95,11 @@ function Footer() {
           </ul>
         </div>
       </div >
-      <div className="flex justify-between bg-black text-gray-500">
-      <span className="pl-20 p-10">
+      <div className="flex flex-col md:flex-row justify-between items-center bg-black text-gray-500 px-4 md:px-10 py-4">
+      <span className="text-center md:text-left mb-4 md:mb-0">
   <h1>2025 | XBeat. All Rights Reserved. Built by | <b>Gulshan Songara</b></h1>
       </span>
-      <span className="grid grid-cols-4 gap-4 pr-20 p-10 text-2xl">
+      <span className="flex gap-4 text-xl md:text-2xl">
         <FaFacebookF className="hover:text-amber-50 cursor-pointer"/>
         <FaTwitter className="hover:text-amber-50 cursor-pointer"/>
         <FaInstagramSquare className="hover:text-amber-50 cursor-pointer"/>

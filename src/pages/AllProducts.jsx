@@ -12,6 +12,7 @@ const AllProducts = () => {
   const [filteredProducts, setFilteredProducts] = useState(productsData);
   const { addToCart } = useContext(CartContext);
   const { searchTerm } = useContext(SearchContext);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Chunk array function
   const chunkArray = (array, size) => {
@@ -27,11 +28,14 @@ const AllProducts = () => {
       const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(product.brand);
       const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(product.category);
       const priceMatch = product.finalPrice <= priceRange;
-      const searchMatch = searchTerm === '' || 
-        product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.info.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      // Enhanced search logic for multiple words
+      const searchMatch = searchTerm === '' || (() => {
+        const searchWords = searchTerm.toLowerCase().split(/\s+/).filter(word => word.length > 0);
+        const productText = (product.title + ' ' + product.brand + ' ' + product.info + ' ' + product.category).toLowerCase();
+        return searchWords.every(word => productText.includes(word));
+      })();
+      
       return brandMatch && categoryMatch && priceMatch && searchMatch;
     });
 
@@ -57,7 +61,7 @@ const AllProducts = () => {
     }
 
     setFilteredProducts(filtered);
-  }, [sortBy, selectedBrands, selectedCategories, priceRange]);
+  }, [sortBy, selectedBrands, selectedCategories, priceRange, searchTerm]);
 
   const handleBrandChange = (brand) => {
     setSelectedBrands(prev =>
@@ -74,10 +78,18 @@ const AllProducts = () => {
   const rows = chunkArray(filteredProducts, 4);
 
   return (
-    <div className="bg-[#121212] min-h-screen pt-20 flex">
+    <div className="bg-[#121212] min-h-screen pt-20 flex flex-col md:flex-row">
       
+      {/* Filter Button for Mobile */}
+      <button
+        className="md:hidden bg-red-600 text-white px-4 py-2 rounded-md m-4 self-start"
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+      >
+        Filters
+      </button>
+
       {/* SIDEBAR */}
-      <div className="w-[280px] p-6 border-r border-gray-800">
+      <div className={`w-full md:w-[280px] p-6 border-r border-gray-800 ${sidebarOpen ? 'block' : 'hidden'} md:block`}>
         
         {/* SORT */}
         <h1 className="text-[#A9AFC3] font-bold text-xl">Sort By</h1>
@@ -154,49 +166,46 @@ const AllProducts = () => {
       </div>
 
       {/* PRODUCTS AREA */}
-      <div className="flex-1 p-10 text-white">
-        {/* Product Rows */}
-        {rows.map((row, rowIndex) => (
-          <div key={rowIndex} className="flex gap-5 mt-5">
-            {row.map((product) => (
-              <div
-                key={product.id}
-                className="bg-[#161819] shadow-lg w-72 border border-gray-400"
-              >
-                <div className="flex flex-col">
-                  {/* Wrap image in Link to product details */}
-                  <Link to={`/product-details/${product.id}`}>
-                    <img
-                      src={product.images[0]}
-                      alt={product.title}
-                      className="h-48 w-48 m-auto mt-4 mb-2 cursor-pointer hover:scale-105 duration-200"
-                    />
-                  </Link>
+      <div className="flex-1 p-4 md:p-10 text-white">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {filteredProducts.map((product) => (
+            <div
+              key={product.id}
+              className="bg-[#161819] shadow-lg border border-gray-400 rounded-md overflow-hidden"
+            >
+              <div className="flex flex-col">
+                {/* Wrap image in Link to product details */}
+                <Link to={`/product-details/${product.id}`}>
+                  <img
+                    src={product.images[0]}
+                    alt={product.title}
+                    className="h-48 w-full object-contain mt-4 mb-2 cursor-pointer hover:scale-105 duration-200"
+                  />
+                </Link>
 
-                  <div className="bg-[#121212] w-full px-4 py-6 rounded-b-md">
-                    <p className="text-red-500">★★★★★</p>
-                    <p className="text-gray-400 font-semibold text-xl mt-2">{product.title}</p>
-                    <h6 className="text-gray-400 mt-1 text-sm">{product.info}</h6>
+                <div className="bg-[#121212] w-full px-4 py-6 rounded-b-md">
+                  <p className="text-red-500">★★★★★</p>
+                  <p className="text-gray-400 font-semibold text-lg md:text-xl mt-2">{product.title}</p>
+                  <h6 className="text-gray-400 mt-1 text-sm">{product.info}</h6>
 
-                    <hr className="border-t border-gray-700 mt-3" />
+                  <hr className="border-t border-gray-700 mt-3" />
 
-                    <div className="flex gap-3 items-center mt-3">
-                      <p className="text-gray-400 font-semibold text-2xl">₹{product.finalPrice.toLocaleString("en-IN")}</p>
-                      <p className="text-gray-400 font-semibold text-lg line-through">₹{product.originalPrice.toLocaleString("en-IN")}</p>
-                    </div>
-
-                    <button
-                      onClick={() => addToCart(product)}
-                      className="mt-3 bg-red-700 hover:bg-red-600 text-white px-16 py-2 rounded-md font-semibold duration-200 cursor-pointer"
-                    >
-                      Add to cart
-                    </button>
+                  <div className="flex gap-3 items-center mt-3">
+                    <p className="text-gray-400 font-semibold text-xl md:text-2xl">₹{product.finalPrice.toLocaleString("en-IN")}</p>
+                    <p className="text-gray-400 font-semibold text-lg line-through">₹{product.originalPrice.toLocaleString("en-IN")}</p>
                   </div>
+
+                  <button
+                    onClick={() => addToCart(product)}
+                    className="mt-3 bg-red-700 hover:bg-red-600 text-white px-6 py-2 rounded-md font-semibold duration-200 cursor-pointer w-full"
+                  >
+                    Add to cart
+                  </button>
                 </div>
               </div>
-            ))}
-          </div>
-        ))}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

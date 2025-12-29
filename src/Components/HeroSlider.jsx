@@ -53,24 +53,24 @@ function HeroSlider() {
         {slides.map((item, index) => (
           <div
             key={index}
-            className="min-w-full h-screen flex items-center px-50 relative text-gray-300"
+            className="min-w-full h-screen flex flex-col md:flex-row items-center px-4 md:px-8 lg:px-16 xl:px-50 relative text-gray-300"
           >
             {/* Background Big Text */}
-            <h1 className="absolute left-10 top-1/2 -translate-y-1/2 text-[200px] font-bold text-[#1a1a1a] select-none"> 
+            <h1 className="hidden md:block absolute left-4 md:left-10 top-1/2 -translate-y-1/2 text-6xl md:text-9xl lg:text-[150px] xl:text-[200px] font-bold text-[#1a1a1a] select-none"> 
               {item.bgText}
             </h1>
 
             {/* Left Content */}
-            <div className="z-10 max-w-lg">
-              <p className="text-lg text-gray-400">{item.title}</p>
+            <div className="z-10 max-w-lg text-center md:text-left">
+              <p className="text-base md:text-lg text-gray-400">{item.title}</p>
 
-              <h1 className="text-5xl font-extrabold leading-tight text-gray-200 mt-3">
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight text-gray-200 mt-3">
                 {item.subtitle}
               </h1>
 
-              <div className="flex items-center gap-4 mt-6">
-                <p className="text-3xl font-bold text-white">{item.price}</p>
-                <p className="text-xl line-through text-gray-500">{item.oldPrice}</p>
+              <div className="flex items-center justify-center md:justify-start gap-4 mt-6">
+                <p className="text-2xl md:text-3xl font-bold text-white">{item.price}</p>
+                <p className="text-lg md:text-xl line-through text-gray-500">{item.oldPrice}</p>
               </div>
 
               <Link
@@ -82,12 +82,12 @@ function HeroSlider() {
             </div>
 
             {/* Right Image */}
-            <div className="ml-auto z-10">
+            <div className="mt-8 md:mt-0 md:ml-auto z-10">
               
                 <img
                 src={item.img}
                 alt="product"
-                className="w-[550px] object-cover"
+                className="w-64 md:w-80 lg:w-96 xl:w-[550px] object-cover"
               />
              
             </div>

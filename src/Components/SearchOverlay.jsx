@@ -3,7 +3,7 @@ import { FaSearch } from "react-icons/fa";
 const SearchOverlay = ({ onClose }) => {
   return (
     <div
-      className="fixed inset-0 z-[999] bg-black/60 backdrop-blur-sm flex items-start justify-center pt-24"
+      className="fixed inset-0 z-999 bg-black/60 backdrop-blur-sm flex items-start justify-center pt-24"
       onClick={onClose}>
       <div
         className="w-[70%] max-w-3xl"
