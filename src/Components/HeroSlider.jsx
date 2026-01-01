@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import products from "../data/products";
 
 function HeroSlider() {
-  // ----- SLIDES DATA (USING YOUR EXACT CODE + IMAGES) -----
   const slides = [
     {
       bgText: "Over Ear",
@@ -33,7 +32,6 @@ function HeroSlider() {
 
   const [current, setCurrent] = useState(0);
 
-  // Auto slide every 4 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
@@ -45,7 +43,6 @@ function HeroSlider() {
   return (
     <div className="relative overflow-hidden w-full h-screen bg-[#121212]">
 
-      {/* Slider Wrapper */}
       <div
         className="flex transition-transform duration-900"
         style={{ transform: `translateX(-${current * 100}%)` }}
@@ -56,12 +53,21 @@ function HeroSlider() {
             className="min-w-full h-screen flex flex-col md:flex-row items-center px-4 md:px-8 lg:px-16 xl:px-50 relative text-gray-300"
           >
             {/* Background Big Text */}
-            <h1 className="hidden md:block absolute left-4 md:left-10 top-1/2 -translate-y-1/2 text-6xl md:text-9xl lg:text-[150px] xl:text-[200px] font-bold text-[#1a1a1a] select-none"> 
+            <h1 className="hidden md:block absolute left-10 top-1/2 -translate-y-1/2 text-6xl md:text-9xl lg:text-[150px] xl:text-[200px] font-bold text-[#1a1a1a] select-none">
               {item.bgText}
             </h1>
 
-            {/* Left Content */}
-            <div className="z-10 max-w-lg text-center md:text-left">
+            {/* IMAGE — FIRST ON MOBILE */}
+            <div className="order-1 md:order-2 mt-8 md:mt-0 md:ml-auto z-10">
+              <img
+                src={item.img}
+                alt="product"
+                className="w-64 md:w-80 lg:w-96 xl:w-[550px] object-cover"
+              />
+            </div>
+
+            {/* TEXT — SECOND ON MOBILE */}
+            <div className="order-2 md:order-1 z-10 max-w-lg text-center md:text-left">
               <p className="text-base md:text-lg text-gray-400">{item.title}</p>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight text-gray-200 mt-3">
@@ -74,28 +80,19 @@ function HeroSlider() {
               </div>
 
               <Link
-                to={`/product-details/${(products.find((p) => p.title === item.title) || { id: index + 1 }).id}`}
+                to={`/product-details/${
+                  (products.find((p) => p.title === item.title) || { id: index + 1 }).id
+                }`}
                 className="mt-8 inline-block bg-red-700 hover:bg-red-600 text-white px-6 py-3 rounded-md text-lg font-semibold duration-200"
               >
                 Shop Now
               </Link>
             </div>
-
-            {/* Right Image */}
-            <div className="mt-8 md:mt-0 md:ml-auto z-10">
-              
-                <img
-                src={item.img}
-                alt="product"
-                className="w-64 md:w-80 lg:w-96 xl:w-[550px] object-cover"
-              />
-             
-            </div>
           </div>
         ))}
       </div>
 
-      {/* Dots Navigation */}
+      {/* Dots */}
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex gap-3">
         {slides.map((_, index) => (
           <div

@@ -114,7 +114,7 @@ const { addToCart } = useContext(CartContext);
         {/* Browse All Card */}
         {activeCategory === "All" && (
           <Link to={"/products"}>
-            <div className="bg-[#161819] shadow-lg border border-gray-400 rounded-md flex justify-center items-center cursor-pointer h-64">
+            <div className="bg-[#161819] shadow-lg border border-gray-400 rounded-md flex justify-center items-center cursor-pointer h-117">
               <div className="flex flex-col text-gray-400 text-xl md:text-2xl hover:text-gray-200 text-center">
                 <h1>Browse All</h1>
                 <h1>Products ➜</h1>

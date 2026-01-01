@@ -6,146 +6,125 @@ import { CartContext } from "./CartContext";
 import { SearchContext } from "./SearchContext";
 import Login from "./Login";
 import Signup from "./Signup";
+import productsData from "../data/products";
 
 const Navbar = () => {
   const { cartItems } = useContext(CartContext);
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const { searchTerm, setSearchTerm } = useContext(SearchContext);
 
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
   const [showSearch, setShowSearch] = useState(false);
-const searchBoxRef = useRef(null);
-const searchIconRef = useRef(null);
-
-
   const [profileOpen, setProfileOpen] = useState(false);
-  const profileRef = useRef(null);
-
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
 
+  const searchRef = useRef(null);
+  const profileRef = useRef(null);
+
   const navigate = useNavigate();
 
+  const filteredProducts = productsData
+    .filter(
+      (p) =>
+        p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.category.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .slice(0, 6);
+
+  // CLOSE ON OUTSIDE CLICK
   useEffect(() => {
-  const handleClickOutside = (e) => {
-    if (
-      showSearch &&
-      searchBoxRef.current &&
-      !searchBoxRef.current.contains(e.target) &&
-      searchIconRef.current &&
-      !searchIconRef.current.contains(e.target)
-    ) {
-      setShowSearch(false);
-    }
+    const handleClickOutside = (e) => {
+      if (showSearch && searchRef.current && !searchRef.current.contains(e.target)) {
+        setShowSearch(false);
+      }
+      if (profileOpen && profileRef.current && !profileRef.current.contains(e.target)) {
+        setProfileOpen(false);
+      }
+    };
 
-    if (
-      profileOpen &&
-      profileRef.current &&
-      !profileRef.current.contains(e.target)
-    ) {
-      setProfileOpen(false);
-    }
-  };
-
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => document.removeEventListener("mousedown", handleClickOutside);
-}, [showSearch, profileOpen]);
-
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showSearch, profileOpen]);
 
   return (
     <nav className="w-full bg-[#121212] text-gray-300 px-4 md:px-6 py-4 fixed top-0 left-0 flex items-center justify-between z-50">
-      
-      {/* MOBILE SEARCH BAR */}
-{showSearch && (
-  <div
-    ref={searchBoxRef}
-    className="
-      md:hidden
-      fixed top-[64px] left-0
-      w-full px-4 py-3
-      bg-[#121212]
-      border-t border-gray-700
-      z-40
-    "
-  >
-    <input
-      type="text"
-      placeholder="Search for product..."
-      autoFocus
-      value={searchTerm}
-      onChange={(e) => {
-        setSearchTerm(e.target.value);
-        navigate("/products");
-      }}
-      className="
-        w-full
-        px-4 py-3
-        bg-[#1e1e1e]
-        text-white
-        border border-gray-600
-        rounded-md
-        outline-none
-      "
-    />
-  </div>
-)}
 
       {/* LOGO */}
       <Link to="/">
-        <h1 className="text-lg md:text-xl font-bold tracking-wide">
+        <h1 className="text-lg md:text-xl font-bold tracking-wide text-white">
           X-Beat
         </h1>
       </Link>
 
-      {/* RIGHT ICONS */}
-      <div className="flex items-center gap-4 md:gap-8 lg:gap-16">
+      {/* RIGHT SIDE */}
+      <div className="flex items-center gap-4 md:gap-8">
 
         {/* SEARCH */}
-        {/* SEARCH ICON */}
-<div ref={searchIconRef} className="relative flex items-center">
-  <FaSearch
-    className="text-xl cursor-pointer hover:text-white"
-    onClick={() => setShowSearch((prev) => !prev)}
-  />
+        <div className="relative flex items-center" ref={searchRef}>
+          <FaSearch
+            className="text-xl cursor-pointer hover:text-white"
+            onClick={() => setShowSearch((prev) => !prev)}
+          />
 
-  {/* DESKTOP SEARCH */}
-  {showSearch && (
-    <div
-      ref={searchBoxRef}
-      className="
-        hidden md:flex
-        absolute right-full mr-3
-        top-1/2 -translate-y-1/2
-        items-center gap-2
-        bg-[#1e1e1e]
-        px-3 py-2
-        rounded-md shadow-lg
-      "
-    >
-      <input
-        type="text"
-        placeholder="Search for product..."
-        autoFocus
-        value={searchTerm}
-        onChange={(e) => {
-          setSearchTerm(e.target.value);
-          navigate("/products");
-        }}
-        className="w-64 bg-transparent text-white border border-gray-600 rounded-md px-3 py-2 outline-none"
-      />
-      <button
-        onClick={() => {
-          setShowSearch(false);
-          setSearchTerm("");
-          navigate("/");
-        }}
-        className="text-xl text-gray-400 hover:text-white cursor-pointer"
-      >
-        ✕
-      </button>
-    </div>
-  )}
-</div>
+          {/* SEARCH INPUT (LEFT OF ICON) */}
+          <div
+            className={`
+              absolute right-8 top-1/2 -translate-y-1/2
+              transition-all duration-300
+              ${showSearch ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}
+            `}
+          >
+            <input
+              type="text"
+              placeholder="Search..."
+              autoFocus
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                navigate("/products");
+              }}
+              className="
+                w-72
+                bg-[#1e1e1e]
+                text-white
+                border border-red-600
+                rounded-md
+                px-4 py-2
+                outline-none
+              "
+            />
 
+            {/* SEARCH RESULTS */}
+            {searchTerm && filteredProducts.length > 0 && (
+              <div className="absolute left-0 mt-2 w-full bg-[#1a1a1a] border border-gray-700 rounded-md shadow-lg max-h-64 overflow-y-auto">
+                {filteredProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="flex items-center gap-3 px-3 py-2 hover:bg-[#2a2a2a] cursor-pointer"
+                    onClick={() => {
+                      navigate(`/product-details/${product.id}`);
+                      setShowSearch(false);
+                      setSearchTerm("");
+                    }}
+                  >
+                    <img
+                      src={product.images[0]}
+                      alt={product.title}
+                      className="w-10 h-10 object-contain"
+                    />
+                    <div className="flex-1">
+                      <p className="text-sm text-white">{product.title}</p>
+                    </div>
+                    <p className="text-red-500 text-sm font-semibold">
+                      ₹{product.finalPrice}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
 
         {/* CART */}
         <Link to="/cart" className="relative">
@@ -166,7 +145,7 @@ const searchIconRef = useRef(null);
 
           {profileOpen && (
             <div className="absolute right-0 mt-4 w-72 bg-[#121212] border border-gray-700 rounded-lg p-4 shadow-lg">
-              <h2 className="text-lg font-semibold">Hello!</h2>
+              <h2 className="text-lg font-semibold text-white">Hello!</h2>
               <p className="text-sm text-gray-400 mb-4">
                 Access account and manage orders
               </p>
@@ -193,10 +172,9 @@ const searchIconRef = useRef(null);
                 </button>
               </div>
 
-              <ul className="space-y-2">
+              <ul className="space-y-2 text-sm">
                 <li className="hover:text-white cursor-pointer">Orders</li>
                 <li className="hover:text-white cursor-pointer">Wishlist</li>
-                <li className="hover:text-white cursor-pointer">Gift Cards</li>
                 <li className="hover:text-white cursor-pointer">Saved Cards</li>
                 <li className="hover:text-white cursor-pointer">Saved Addresses</li>
               </ul>
@@ -205,6 +183,7 @@ const searchIconRef = useRef(null);
         </div>
       </div>
 
+      {/* MODALS */}
       <Login
         isOpen={showLoginModal}
         onClose={() => setShowLoginModal(false)}
