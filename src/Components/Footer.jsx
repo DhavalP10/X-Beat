@@ -52,7 +52,7 @@ function Footer() {
       </div>
       </div>
       <footer>
-      <div className="bg-black grid grid-cols-1 md:grid-cols-4 gap-8 px-8 md:px-15 py-20">
+      <div className="bg-black grid grid-cols-1 md:grid-cols-4 gap-8 px-8 md:px-15 py-20 lg:pl-30">
   <div>
     <h1 className="text-gray-400 text-xl md:text-2xl font-bold">X-Beat</h1>
     <p className="text-gray-400 mt-4 text-sm md:text-base">

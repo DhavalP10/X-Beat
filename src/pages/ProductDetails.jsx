@@ -1,24 +1,74 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import products from "../data/products";
 import { CartContext } from "../Components/CartContext";
 import { useContext } from "react";
+import productapi from "../productapi";
+import { useNavigate } from "react-router-dom";
 
 
 const ProductDetails = () => {
   const { id } = useParams(); // ✅ get product id from URL
 
-  const product = products.find((item) => item.id === Number(id)); // ✅ get clicked product
+  // const product = products.find((item) => item.id === Number(id)); 
 
-  if (!product) return null;
-  const relatedProducts = products.filter(
-  (item) =>
-    item.category === product.category && item.id !== product.id
-);
+  // if (!product) return null;
+  
+
+const [product, setProduct] = useState(null);
+const [relatedProducts, setRelatedProducts] = useState([]);
+
+const navigate = useNavigate();
+
+useEffect(() => {
+  const loadSpec = async () => {
+    const data = await productapi.getProducts(); // fetch all
+
+    const foundProduct = data.find(
+      (item) => item._id === id
+    );
+
+    if (foundProduct) {
+      setProduct(foundProduct);
+    }
+  };
+
+  loadSpec();
+}, [id]);
+
+useEffect(() => {
+  if (!product) return;
+
+  const fetchRelated = async () => {
+    const data = await productapi.getProducts({
+      category: product.category,
+    });
+
+    setRelatedProducts(
+      data.filter((item) => item._id !== product._id)
+    );
+  };
+
+  fetchRelated();
+}, [product]);
+
+useEffect(() => {
+  if (product?.images?.length > 0) {
+    setMainImage(product.images[0]);
+  }
+}, [product]);
+
 
 const { addToCart } = useContext(CartContext);
   const [activeTab, setActiveTab] = useState("specifications");
-  const [mainImage, setMainImage] = useState(product.images[0]);
+const [mainImage, setMainImage] = useState("");
+
+if (!product) {
+  return (
+    <div className="min-h-screen bg-[#121212] text-gray-400 flex items-center justify-center">
+      Loading product details...
+    </div>
+  );
+}
 
   const savings = product.originalPrice - product.finalPrice;
   const discountPercent = Math.round((savings / product.originalPrice) * 100);
@@ -216,8 +266,8 @@ const { addToCart } = useContext(CartContext);
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
     {relatedProducts.map((item) => (
       <div
-        key={item.id}
-        onClick={() => window.location.href = `/product-details/${item.id}`}
+        key={item._id}
+        onClick={() => navigate(`/product-details/${item._id}`)}
         className="border border-gray-700 rounded-lg p-4 bg-[#181818] hover:scale-[1.02] transition cursor-pointer"
       >
         {/* IMAGE */}

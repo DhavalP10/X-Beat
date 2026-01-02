@@ -1,18 +1,35 @@
 // TopProduct.js
-import React, { useState } from "react";
-import productsData from "../data/products.js";
+import React, { useEffect, useState } from "react";
+// import productsData from "../data/products.js";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { CartContext } from "../Components/CartContext";
+import productapi from "../productapi.js";
 
 function TopProduct() {
 const [activeCategory, setActiveCategory] = useState("All");
 const { addToCart } = useContext(CartContext);
 
+const [loadData,setloadData] = useState([]);
   const filteredProducts =
   activeCategory === "All"
-    ? productsData.slice(0, 11)    // show 11 items initially
-    : productsData.filter((item) => item.category === activeCategory);
+    ? loadData.slice(0, 11)    // show 11 items initially
+    : loadData.filter((item) => item.category === activeCategory);
+
+
+
+useEffect(()=>{
+  const topPrload = async () =>{
+    const categoryParam =
+      activeCategory === "All" ? {} : { category: activeCategory };
+      console.log("API FILTER PARAM 👉", categoryParam);
+    const topData = await productapi.getProducts(categoryParam);
+    setloadData(topData);
+    
+  };
+  topPrload();
+},[activeCategory])
+
 
   return (
     <div className="bg-[#121212] min-h-screen flex flex-col items-center pt-20 px-4">
@@ -76,12 +93,12 @@ const { addToCart } = useContext(CartContext);
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-10 w-full max-w-7xl">
         {filteredProducts.map((item) => (
           <div
-            key={item.id}
+            key={item._id}
             className="bg-[#161819] shadow-lg border border-gray-400 rounded-md overflow-hidden"
           >
             <div className="flex flex-col">
               {/* Wrap image in Link to product details */}
-              <Link to={`/product-details/${item.id}`}>
+              <Link to={`/product-details/${item._id}`}>
                 <img
                   src={item.images[0]}
                   alt={item.title}

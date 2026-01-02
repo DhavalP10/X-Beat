@@ -1,44 +1,33 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import products from "../data/products";
+import productapi from "../productapi";
 
 function HeroSlider() {
-  const slides = [
-    {
-      bgText: "Over Ear",
-      title: "Sony WH-XB910N",
-      subtitle: "Give Your Favourite Music A Boost.",
-      price: "₹13,489",
-      oldPrice: "₹19,990",
-      img: "/products/sonyXb910n-1.png",
-    },
-    {
-      bgText: "In Ear",
-      title: "boAt Airdopes 131",
-      subtitle: "Featherweight for comfort all-day.",
-      price: "₹1,099",
-      oldPrice: "₹2,990",
-      img: "/products/boat131-3.png",
-    },
-    {
-      bgText: "Over Ear",
-      title: "JBL Live 660NC",
-      subtitle: "Keep the noise out, Or in. You choose.",
-      price: "₹9,999",
-      oldPrice: "₹14,990",
-      img: "/products/jbl660nc-1.png",
-    },
-  ];
+
+  const [slides,setSlides] = useState([]);
+
+useEffect(()=>{
+  const heroload = async () =>{
+    const heroProducts = await productapi.getProducts({tag:"hero-product"});
+    console.log("Hero Product",heroProducts);
+    
+    setSlides(heroProducts);
+  };
+  heroload();
+}, []);
 
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
-    }, 4000);
+  if (slides.length === 0) return;
 
-    return () => clearInterval(timer);
-  }, []);
+  const timer = setInterval(() => {
+    setCurrent((prev) => (prev + 1) % slides.length);
+  }, 4000);
+
+  return () => clearInterval(timer);
+}, [slides]);
+
 
   return (
     <div className="relative overflow-hidden w-full h-screen bg-[#121212]">
@@ -60,7 +49,7 @@ function HeroSlider() {
             {/* IMAGE — FIRST ON MOBILE */}
             <div className="order-1 md:order-2 mt-8 md:mt-0 md:ml-auto z-10">
               <img
-                src={item.img}
+                src={item.heroImage}
                 alt="product"
                 className="w-64 md:w-80 lg:w-96 xl:w-[550px] object-cover"
               />
@@ -71,17 +60,17 @@ function HeroSlider() {
               <p className="text-base md:text-lg text-gray-400">{item.title}</p>
 
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-extrabold leading-tight text-gray-200 mt-3">
-                {item.subtitle}
+                {item.tagline}
               </h1>
 
               <div className="flex items-center justify-center md:justify-start gap-4 mt-6">
-                <p className="text-2xl md:text-3xl font-bold text-white">{item.price}</p>
-                <p className="text-lg md:text-xl line-through text-gray-500">{item.oldPrice}</p>
+                <p className="text-2xl md:text-3xl font-bold text-white"> ₹{item.finalPrice.toLocaleString("en-IN")}</p>
+                <p className="text-lg md:text-xl line-through text-gray-500"> ₹{item.originalPrice.toLocaleString("en-IN")}</p>
               </div>
 
               <Link
                 to={`/product-details/${
-                  (products.find((p) => p.title === item.title) || { id: index + 1 }).id
+                  (slides.find((p) => p.title === item.title) || { id: index + 1 }).id
                 }`}
                 className="mt-8 inline-block bg-red-700 hover:bg-red-600 text-white px-6 py-3 rounded-md text-lg font-semibold duration-200"
               >

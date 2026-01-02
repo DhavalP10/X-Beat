@@ -1,5 +1,4 @@
-import React from "react";
-import products from "../data/products"
+import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, EffectCoverflow } from "swiper/modules";
 import { Link } from "react-router-dom";
@@ -7,10 +6,21 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
 import "./swiperCustom.css"; // for red dots
+// import axios from "axios";
+import productapi from "../productapi";
 
 function FeaturedProducts() {
-  const featuredProducts = products.filter(p => p.f);
+  
+const [featuredProducts, setfeaturedProducts] = useState([]);
 
+useEffect(() => {
+  const productload = async () => {
+    const products = await productapi.getProducts({ tag: "featured-product"});
+    setfeaturedProducts(products);
+  };
+
+  productload();
+}, []);
 
 
   return (
@@ -29,7 +39,7 @@ function FeaturedProducts() {
           640: { slidesPerView: 2 },
           1024: { slidesPerView: 3 },
         }}
-        loop={true}
+        loop={featuredProducts.length > 3}
         coverflowEffect={{
           rotate: 0,
           stretch: 0,
@@ -42,19 +52,19 @@ function FeaturedProducts() {
         spaceBetween={20}
         className="featured-swiper"
       >
-        {featuredProducts.map((product,index) => (
+        {featuredProducts.map((products,index) => (
           <SwiperSlide key={index}>
             <div className="text-center text-gray-400">
-              <p className="text-lg font-semibold mb-4">{product.name}</p>
-              <Link to={`/product-details/${product.id}`}>
+              <p className="text-lg font-semibold mb-4">{products.title}</p>
+              <Link to={`$/product-details/${products._id}`}>
               <img
-                src={product.images[0]}
+                src={products.images[0]}
                 className="h-80 w-80 object-contain mx-auto cursor-pointer transition-transform duration-500"
               /></Link>
               <div className="flex justify-center gap-6 mt-4">
-                <p className="text-gray-400 font-bold text-2xl">₹{product.finalPrice.toLocaleString("en-IN")}</p>
+                <p className="text-gray-400 font-bold text-2xl">₹{products.finalPrice.toLocaleString("en-IN")}</p>
                 <p className="text-gray-400 font-bold text-2xl pb-15 line-through">
-                  ₹{product.originalPrice.toLocaleString("en-IN")}
+                  ₹{products.originalPrice.toLocaleString("en-IN")}
                 </p>
               </div>
             </div>
