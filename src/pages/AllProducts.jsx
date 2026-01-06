@@ -1,18 +1,22 @@
 import React, { useState, useEffect, useContext } from 'react';
-import productsData from '../data/products.js';
 import { Link } from 'react-router-dom';
 import { CartContext } from '../Components/CartContext';
 import { SearchContext } from '../Components/SearchContext';
+import { ProductContext } from "../context/ProductContext";
+
 
 const AllProducts = () => {
   const [sortBy, setSortBy] = useState('Latest');
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceRange, setPriceRange] = useState(20000);
-  const [filteredProducts, setFilteredProducts] = useState(productsData);
   const { addToCart } = useContext(CartContext);
   const { searchTerm } = useContext(SearchContext);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+const [filteredProducts, setFilteredProducts] = useState([]);
+const { products, loading } = useContext(ProductContext);
+
+
 
   // Chunk array function
   const chunkArray = (array, size) => {
@@ -23,45 +27,86 @@ const AllProducts = () => {
     return result;
   };
 
+  
+
+  // 🔹 FILTER + SORT LOGIC
   useEffect(() => {
-    let filtered = productsData.filter(product => {
-      const brandMatch = selectedBrands.length === 0 || selectedBrands.includes(product.brand);
-      const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(product.category);
+    if (!products.length) {
+      setFilteredProducts([]);
+      return;
+    }
+
+    let filtered = products.filter((product) => {
+      const brandMatch =
+        selectedBrands.length === 0 ||
+        selectedBrands.includes(product.brand);
+
+      const categoryMatch =
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(product.category);
+
       const priceMatch = product.finalPrice <= priceRange;
-      
-      // Enhanced search logic for multiple words
-      const searchMatch = searchTerm === '' || (() => {
-        const searchWords = searchTerm.toLowerCase().split(/\s+/).filter(word => word.length > 0);
-        const productText = (product.title + ' ' + product.brand + ' ' + product.info + ' ' + product.category).toLowerCase();
-        return searchWords.every(word => productText.includes(word));
-      })();
-      
+
+      const searchMatch =
+        searchTerm === "" ||
+        searchTerm
+          .toLowerCase()
+          .split(/\s+/)
+          .every((word) =>
+            (
+              product.title +
+              product.brand +
+              product.info +
+              product.category
+            )
+              .toLowerCase()
+              .includes(word)
+          );
+
       return brandMatch && categoryMatch && priceMatch && searchMatch;
     });
 
-    // Sort
     switch (sortBy) {
-      case 'Latest':
-        filtered = filtered.sort((a, b) => b.id - a.id);
+      case "Latest":
+        filtered = [...filtered].sort((a, b) => b.id - a.id);
         break;
-      case 'Featured':
-        filtered = filtered.filter(p => p.f).concat(filtered.filter(p => !p.f));
+      case "Top Rated":
+        filtered = [...filtered].sort(
+          (a, b) => b.rateCount - a.rateCount
+        );
         break;
-      case 'Top Rated':
-        filtered = filtered.sort((a, b) => b.rateCount - a.rateCount);
+      case "Price (Lowest First)":
+        filtered = [...filtered].sort(
+          (a, b) => a.finalPrice - b.finalPrice
+        );
         break;
-      case 'Price (Lowest First)':
-        filtered = filtered.sort((a, b) => a.finalPrice - b.finalPrice);
-        break;
-      case 'Price (Highest First)':
-        filtered = filtered.sort((a, b) => b.finalPrice - a.finalPrice);
+      case "Price (Highest First)":
+        filtered = [...filtered].sort(
+          (a, b) => b.finalPrice - a.finalPrice
+        );
         break;
       default:
         break;
     }
 
     setFilteredProducts(filtered);
-  }, [sortBy, selectedBrands, selectedCategories, priceRange, searchTerm]);
+  }, [
+    products,
+    sortBy,
+    selectedBrands,
+    selectedCategories,
+    priceRange,
+    searchTerm,
+  ]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#121212] text-gray-400 flex items-center justify-center">
+        Loading products...
+      </div>
+    );
+  }
+
 
   const handleBrandChange = (brand) => {
     setSelectedBrands(prev =>
@@ -170,12 +215,12 @@ const AllProducts = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {filteredProducts.map((product) => (
             <div
-              key={product.id}
+              key={product._id}
               className="bg-[#161819] shadow-lg border border-gray-400 rounded-md overflow-hidden"
             >
               <div className="flex flex-col">
                 {/* Wrap image in Link to product details */}
-                <Link to={`/product-details/${product.id}`}>
+                <Link to={`/product-details/${product._id}`}>
                   <img
                     src={product.images[0]}
                     alt={product.title}

@@ -2,73 +2,62 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { CartContext } from "../Components/CartContext";
 import { useContext } from "react";
-import productapi from "../productapi";
+// import productapi from "../productapi";
 import { useNavigate } from "react-router-dom";
+import { ProductContext } from "../context/ProductContext";
+
 
 
 const ProductDetails = () => {
   const { id } = useParams(); // ✅ get product id from URL
-
-  // const product = products.find((item) => item.id === Number(id)); 
-
-  // if (!product) return null;
-  
-
 const [product, setProduct] = useState(null);
 const [relatedProducts, setRelatedProducts] = useState([]);
-
-const navigate = useNavigate();
-
-useEffect(() => {
-  const loadSpec = async () => {
-    const data = await productapi.getProducts(); // fetch all
-
-    const foundProduct = data.find(
-      (item) => item._id === id
-    );
-
-    if (foundProduct) {
-      setProduct(foundProduct);
-    }
-  };
-
-  loadSpec();
-}, [id]);
-
-useEffect(() => {
-  if (!product) return;
-
-  const fetchRelated = async () => {
-    const data = await productapi.getProducts({
-      category: product.category,
-    });
-
-    setRelatedProducts(
-      data.filter((item) => item._id !== product._id)
-    );
-  };
-
-  fetchRelated();
-}, [product]);
-
-useEffect(() => {
-  if (product?.images?.length > 0) {
-    setMainImage(product.images[0]);
-  }
-}, [product]);
-
-
 const { addToCart } = useContext(CartContext);
-  const [activeTab, setActiveTab] = useState("specifications");
+const [activeTab, setActiveTab] = useState("specifications");
 const [mainImage, setMainImage] = useState("");
-
-if (!product) {
+const navigate = useNavigate();
+const { products, loading } = useContext(ProductContext);
+if (!id) {
   return (
     <div className="min-h-screen bg-[#121212] text-gray-400 flex items-center justify-center">
-      Loading product details...
+      Invalid product
     </div>
   );
 }
+
+useEffect(() => {
+    if (!products.length || !id) return;
+
+    const found = products.find((item) => item._id === id);
+    if (found) {
+      setProduct(found);
+      setMainImage(found.images?.[0] || "");
+    }
+  }, [products, id]);
+
+  // 🔹 FIND RELATED PRODUCTS
+  useEffect(() => {
+    if (!product || !products.length) return;
+
+    const related = products.filter(
+      (item) =>
+        item.category === product.category &&
+        item._id !== product._id
+    );
+
+    setRelatedProducts(related);
+  }, [product, products]);
+
+  if (loading || !product) {
+    return (
+      <div className="min-h-screen bg-[#121212] text-gray-400 flex items-center justify-center">
+        Loading product details...
+      </div>
+    );
+  }
+
+
+
 
   const savings = product.originalPrice - product.finalPrice;
   const discountPercent = Math.round((savings / product.originalPrice) * 100);
@@ -156,7 +145,7 @@ if (!product) {
 
           <button
             onClick={() => addToCart(product)}
-            className="mt-6 bg-red-600 hover:bg-red-700 px-6 md:px-10 py-3 rounded-lg text-lg w-full md:w-auto"
+            className="mt-6 bg-red-600 hover:bg-red-700 px-6 md:px-10 py-3 rounded-lg text-lg w-full md:w-auto cursor-pointer"
           >
             Add to Cart
           </button>
@@ -188,26 +177,54 @@ if (!product) {
         {/* CONTENT */}
         <div className="mt-10 bg-[#0f0f0f] rounded-xl p-4 md:p-10 max-w-5xl mx-auto shadow-lg">
           {activeTab === "specifications" && (
-            <div className="flex flex-col md:flex-row gap-8 md:gap-20 text-sm md:text-lg text-gray-300 justify-center">
-              <ul>
-                <li className="pb-4">Brand</li>
-                <li className="pb-4">Model</li>
-                <li className="pb-4">Generic Name</li>
-                <li className="pb-4">Headphone Type</li>
-                <li className="pb-4">Connectivity</li>
-                <li className="pb-4">Microphone</li>
-              </ul>
+  <div className="space-y-4 text-sm md:text-lg">
 
-              <ul className="font-semibold text-left md:text-right text-white">
-                <li className="pb-4">{product.brand}</li>
-                <li className="pb-4">{product.title}</li>
-                <li className="pb-4">{product.category}</li>
-                <li className="pb-4">{product.type}</li>
-                <li className="pb-4">{product.connectivity}</li>
-                <li className="pb-4">Yes</li>
-              </ul>
-            </div>
-          )}
+    {/* ROW */}
+    <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
+      <span>Brand</span>
+      <span className="font-semibold text-white md:text-right">
+        {product.brand}
+      </span>
+    </div>
+
+    <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
+      <span>Model</span>
+      <span className="font-semibold text-white md:text-right">
+        {product.title}
+      </span>
+    </div>
+
+    <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
+      <span>Generic Name</span>
+      <span className="font-semibold text-white md:text-right">
+        {product.category}
+      </span>
+    </div>
+
+    <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
+      <span>Headphone Type</span>
+      <span className="font-semibold text-white md:text-right">
+        {product.type}
+      </span>
+    </div>
+
+    <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
+      <span>Connectivity</span>
+      <span className="font-semibold text-white md:text-right">
+        {product.connectivity}
+      </span>
+    </div>
+
+    <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
+      <span>Microphone</span>
+      <span className="font-semibold text-white md:text-right">
+        Yes
+      </span>
+    </div>
+
+  </div>
+)}
+
 
           {activeTab === "overview" && (
             <div className="text-gray-300 space-y-4 text-sm md:text-base">
@@ -268,7 +285,7 @@ if (!product) {
       <div
         key={item._id}
         onClick={() => navigate(`/product-details/${item._id}`)}
-        className="border border-gray-700 rounded-lg p-4 bg-[#181818] hover:scale-[1.02] transition cursor-pointer"
+        className="border border-gray-600 rounded-lg p-4 bg-[#181818] hover:scale-[1.02] transition cursor-pointer"
       >
         {/* IMAGE */}
         <div className="h-32 md:h-48 flex items-center justify-center">

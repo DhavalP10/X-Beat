@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay, EffectCoverflow } from "swiper/modules";
 import { Link } from "react-router-dom";
@@ -6,21 +6,28 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
 import "./swiperCustom.css"; // for red dots
-// import axios from "axios";
-import productapi from "../productapi";
+import { ProductContext } from "../context/ProductContext";
+
 
 function FeaturedProducts() {
-  
-const [featuredProducts, setfeaturedProducts] = useState([]);
+
+
+const { products, loading } = useContext(ProductContext);
+const [featuredProducts, setFeaturedProducts] = useState([]);
 
 useEffect(() => {
-  const productload = async () => {
-    const products = await productapi.getProducts({ tag: "featured-product"});
-    setfeaturedProducts(products);
-  };
+  if (products.length > 0) {
+    const featured = products.filter(
+      (item) => item.tag === "featured-product"
+    );
+    setFeaturedProducts(featured);
+  }
+}, [products]);
 
-  productload();
-}, []);
+if (loading) {
+    return <p className="text-center text-gray-400">Loading Featured Data...</p>;
+  }
+
 
 
   return (
@@ -56,7 +63,7 @@ useEffect(() => {
           <SwiperSlide key={index}>
             <div className="text-center text-gray-400">
               <p className="text-lg font-semibold mb-4">{products.title}</p>
-              <Link to={`$/product-details/${products._id}`}>
+              <Link to={`/product-details/${products._id}`}>
               <img
                 src={products.images[0]}
                 className="h-80 w-80 object-contain mx-auto cursor-pointer transition-transform duration-500"

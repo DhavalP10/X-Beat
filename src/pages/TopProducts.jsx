@@ -4,31 +4,36 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { CartContext } from "../Components/CartContext";
-import productapi from "../productapi.js";
+import { ProductContext } from "../context/ProductContext";
+// import productapi from "../productapi.js";
 
 function TopProduct() {
 const [activeCategory, setActiveCategory] = useState("All");
+// const [loading, setLoading] = useState(true);
+
 const { addToCart } = useContext(CartContext);
 
-const [loadData,setloadData] = useState([]);
-  const filteredProducts =
+// const [loadData,setloadData] = useState([]);
+const { products, loading } = useContext(ProductContext);
+  
+const filteredProducts =
   activeCategory === "All"
-    ? loadData.slice(0, 11)    // show 11 items initially
-    : loadData.filter((item) => item.category === activeCategory);
+    ? products.slice(0, 11)
+    : products.filter(item => item.category === activeCategory);
 
 
 
-useEffect(()=>{
-  const topPrload = async () =>{
-    const categoryParam =
-      activeCategory === "All" ? {} : { category: activeCategory };
-      console.log("API FILTER PARAM 👉", categoryParam);
-    const topData = await productapi.getProducts(categoryParam);
-    setloadData(topData);
-    
-  };
-  topPrload();
-},[activeCategory])
+
+
+if (!filteredProducts) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-[#121212] text-gray-400">
+        Loading Top products...
+      </div>
+    );
+  }
+
+
 
 
   return (
@@ -38,7 +43,7 @@ useEffect(()=>{
       {/* Category Buttons */}
       <div className="text-gray-400 text-sm md:text-lg flex flex-wrap justify-center gap-4 mt-8">
         <button
-          className={`px-4 py-2 rounded-md ${
+          className={`px-4 py-2 rounded-md cursor-pointer ${
             activeCategory === "All"
               ? "bg-red-600 text-white"
               : "bg-[#121212] hover:bg-red-600 hover:text-white"
@@ -48,7 +53,7 @@ useEffect(()=>{
           All
         </button>
         <button
-          className={`px-4 py-2 rounded-md ${
+          className={`px-4 py-2 rounded-md cursor-pointer ${
             activeCategory === "Headphones"
               ? "bg-red-600 text-white"
               : "bg-[#121212] hover:bg-red-600 hover:text-white"
@@ -58,7 +63,7 @@ useEffect(()=>{
           Headphones
         </button>
         <button
-          className={`px-4 py-2 rounded-md ${
+          className={`px-4 py-2 rounded-md cursor-pointer ${
             activeCategory === "Earbuds"
               ? "bg-red-600 text-white"
               : "bg-[#121212] hover:bg-red-600 hover:text-white"
@@ -68,7 +73,7 @@ useEffect(()=>{
           Earbuds
         </button>
         <button
-          className={`px-4 py-2 rounded-md ${
+          className={`px-4 py-2 rounded-md cursor-pointer ${
             activeCategory === "Earphones"
               ? "bg-red-600 text-white"
               : "bg-[#121212] hover:bg-red-600 hover:text-white"
@@ -78,7 +83,7 @@ useEffect(()=>{
           Earphones
         </button>
         <button
-          className={`px-4 py-2 rounded-md ${
+          className={`px-4 py-2 rounded-md cursor-pointer ${
             activeCategory === "Neckbands"
               ? "bg-red-600 text-white"
               : "bg-[#121212] hover:bg-red-600 hover:text-white"
@@ -90,56 +95,78 @@ useEffect(()=>{
       </div>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-10 w-full max-w-7xl">
-        {filteredProducts.map((item) => (
-          <div
-            key={item._id}
-            className="bg-[#161819] shadow-lg border border-gray-400 rounded-md overflow-hidden"
-          >
-            <div className="flex flex-col">
-              {/* Wrap image in Link to product details */}
-              <Link to={`/product-details/${item._id}`}>
-                <img
-                  src={item.images[0]}
-                  alt={item.title}
-                  className="h-48 w-full object-contain mt-5 mb-2 cursor-pointer hover:scale-105 duration-200"
-                />
-              </Link>
+      {/* Product Grid */}
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-10 w-full max-w-7xl">
 
-              <div className="bg-[#121212] w-full px-4 py-6 rounded-b-md">
-                <p className="text-red-500">★★★★★</p>
-                <p className="text-gray-400 font-semibold text-lg md:text-xl mt-2">{item.title}</p>
-                <h6 className="text-gray-400 mt-1 text-sm">{item.info}</h6>
+  {loading ? (
+    <div className="col-span-full flex justify-center items-center py-20">
+      <p className="text-gray-400 text-xl animate-pulse">
+        Loading products...
+      </p>
+    </div>
+  ) : (
+    <>
+      {filteredProducts.map((item) => (
+        <div
+          key={item._id}
+          className="bg-[#161819] shadow-lg border border-gray-400 rounded-md overflow-hidden"
+        >
+          <div className="flex flex-col">
 
-                <hr className="border-t border-gray-700 mt-3" />
+            <Link to={`/product-details/${item._id}`}>
+              <img
+                src={item.images[0]}
+                alt={item.title}
+                className="h-48 w-full object-contain mt-5 mb-2 cursor-pointer hover:scale-105 duration-200"
+              />
+            </Link>
 
-                <div className="flex gap-2 items-center mt-3">
-                  <p className="text-gray-400 font-semibold text-xl md:text-2xl">₹{item.finalPrice.toLocaleString("en-IN")}</p>
-                  <p className="text-gray-400 font-semibold text-lg line-through">₹{item.originalPrice.toLocaleString("en-IN")}</p>
-                </div>
+            <div className="bg-[#121212] w-full px-4 py-6 rounded-b-md">
+              <p className="text-red-500">★★★★★</p>
+              <p className="text-gray-400 font-semibold text-lg md:text-xl mt-2">
+                {item.title}
+              </p>
+              <h6 className="text-gray-400 mt-1 text-sm">
+                {item.info}
+              </h6>
 
-                <button
-                  onClick={() => addToCart(item)}
-                  className="mt-4 bg-red-700 hover:bg-red-600 text-white px-6 py-2 rounded-md font-semibold duration-200 cursor-pointer w-full"
-                >
-                  Add to cart
-                </button>
+              <hr className="border-t border-gray-700 mt-3" />
+
+              <div className="flex gap-2 items-center mt-3">
+                <p className="text-gray-400 font-semibold text-xl md:text-2xl">
+                  ₹{item.finalPrice.toLocaleString("en-IN")}
+                </p>
+                <p className="text-gray-400 font-semibold text-lg line-through">
+                  ₹{item.originalPrice.toLocaleString("en-IN")}
+                </p>
               </div>
+
+              <button
+                onClick={() => addToCart(item)}
+                className="mt-4 bg-red-700 hover:bg-red-600 text-white px-6 py-2 rounded-md font-semibold duration-200 cursor-pointer w-full"
+              >
+                Add to cart
+              </button>
             </div>
           </div>
-        ))}
-        {/* Browse All Card */}
-        {activeCategory === "All" && (
-          <Link to={"/products"}>
-            <div className="bg-[#161819] shadow-lg border border-gray-400 rounded-md flex justify-center items-center cursor-pointer h-117">
-              <div className="flex flex-col text-gray-400 text-xl md:text-2xl hover:text-gray-200 text-center">
-                <h1>Browse All</h1>
-                <h1>Products ➜</h1>
-              </div>
+        </div>
+      ))}
+
+      {activeCategory === "All" && (
+        <Link to={"/products"}>
+          <div className="bg-[#161819] shadow-lg border border-gray-400 rounded-md flex justify-center items-center cursor-pointer h-117">
+            <div className="flex flex-col text-gray-400 text-xl md:text-2xl hover:text-gray-200 text-center">
+              <h1>Browse All</h1>
+              <h1>Products ➜</h1>
             </div>
-          </Link>
-        )}
-      </div>
+          </div>
+        </Link>
+      )}
+    </>
+  )}
+
+</div>
+
     </div>
   );
 }

@@ -37,7 +37,7 @@ const Cart = () => {
           <div className="lg:col-span-2 space-y-4">
             {cartItems.map((item) => (
               <div
-                key={item.id}
+                key={item._id}
                 className="bg-[#1a1a1a] rounded-lg p-6 shadow-lg hover:shadow-xl transition-shadow"
               >
                 <div className="flex flex-col md:flex-row gap-4">
@@ -46,7 +46,7 @@ const Cart = () => {
                     <img 
                       src={item.images[0]} 
                       alt={item.title} 
-                      className="w-24 h-24 md:w-32 md:h-32 object-cover rounded-lg" 
+                      className="w-24 h-24 md:w-32 md:h-32 object-contain rounded-lg" 
                     />
                   </div>
 
@@ -55,8 +55,8 @@ const Cart = () => {
                     <div className="flex justify-between items-start mb-2">
                       <h2 className="text-xl font-semibold text-gray-100">{item.title}</h2>
                       <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="text-red-500 hover:text-red-400 transition-colors p-1"
+                        onClick={() => removeFromCart(item._id)}
+                        className="text-red-500 hover:text-red-400 transition-colors p-1 cursor-pointer"
                         title="Remove item"
                       >
                         <TbTrash size={20} />
@@ -71,16 +71,16 @@ const Cart = () => {
                         <span className="text-gray-400 text-sm">Quantity:</span>
                         <div className="flex items-center bg-[#2a2a2a] rounded-lg">
                           <button
-                            onClick={() => decreaseQuantity(item.id)}
-                            className="p-2 text-gray-400 hover:text-white hover:bg-[#3a3a3a] rounded-l-lg transition-colors"
+                            onClick={() => decreaseQuantity(item._id)}
+                            className="p-2 text-gray-400 hover:text-white hover:bg-[#3a3a3a] rounded-l-lg transition-colors cursor-pointer"
                             disabled={item.quantity <= 1}
                           >
                             <TbMinus size={16} />
                           </button>
                           <span className="px-4 py-2 text-center min-w-12">{item.quantity}</span>
                           <button
-                            onClick={() => increaseQuantity(item.id)}
-                            className="p-2 text-gray-400 hover:text-white hover:bg-[#3a3a3a] rounded-r-lg transition-colors"
+                            onClick={() => increaseQuantity(item._id)}
+                            className="p-2 text-gray-400 hover:text-white hover:bg-[#3a3a3a] rounded-r-lg transition-colors cursor-pointer"
                           >
                             <TbPlus size={16} />
                           </button>
@@ -130,12 +130,12 @@ const Cart = () => {
                 </div>
               </div>
 
-              <button className="w-full bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors mb-4">
+              <button className="w-full bg-red-600 hover:bg-red-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors mb-4 cursor-pointer">
                 Proceed to Checkout
               </button>
               
-              <Link to="/" className="block text-center">
-                <button className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition-colors">
+              <Link to="/products" className="block text-center">
+                <button className="w-full bg-gray-700 hover:bg-gray-600 text-white py-2 px-4 rounded-lg transition-colors cursor-pointer">
                   Continue Shopping
                 </button>
               </Link>

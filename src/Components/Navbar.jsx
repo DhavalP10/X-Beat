@@ -6,7 +6,9 @@ import { CartContext } from "./CartContext";
 import { SearchContext } from "./SearchContext";
 import Login from "./Login";
 import Signup from "./Signup";
-import productsData from "../data/products";
+// import productsData from "../data/products";
+// import productapi from "../productapi";
+import { ProductContext } from "../context/ProductContext";
 
 const Navbar = () => {
   const { cartItems } = useContext(CartContext);
@@ -23,8 +25,11 @@ const Navbar = () => {
   const profileRef = useRef(null);
 
   const navigate = useNavigate();
+  const { products } = useContext(ProductContext);
+  
+  
 
-  const filteredProducts = productsData
+  const filteredProducts = products
     .filter(
       (p) =>
         p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -48,7 +53,7 @@ const Navbar = () => {
   }, [showSearch, profileOpen]);
 
   return (
-    <nav className="w-full bg-[#121212] text-gray-300 px-4 md:px-6 py-4 fixed top-0 left-0 flex items-center justify-between z-50">
+    <nav className="w-full bg-[#121212] text-gray-300 px-4 md:px-20 py-4 fixed top-0 left-0 flex items-center justify-between z-[70]">
 
       {/* LOGO */}
       <Link to="/">
@@ -58,73 +63,87 @@ const Navbar = () => {
       </Link>
 
       {/* RIGHT SIDE */}
-      <div className="flex items-center gap-4 md:gap-8">
+      <div className="flex items-center gap-4 md:gap-15">
 
         {/* SEARCH */}
-        <div className="relative flex items-center" ref={searchRef}>
-          <FaSearch
-            className="text-xl cursor-pointer hover:text-white"
-            onClick={() => setShowSearch((prev) => !prev)}
-          />
+        {/* SEARCH INPUT (FIXED ON MOBILE, ABSOLUTE ON DESKTOP) */}
+{/* SEARCH */}
+<div className="relative flex items-center" ref={searchRef}>
+  {/* SEARCH ICON */}
+  <FaSearch
+    className="text-xl cursor-pointer hover:text-white"
+    onClick={() => setShowSearch((prev) => !prev)}
+  />
 
-          {/* SEARCH INPUT (LEFT OF ICON) */}
+  {/* SEARCH INPUT (FIXED ON MOBILE, ABSOLUTE ON DESKTOP) */}
+  <div
+    className={`
+      transition-all duration-300
+      ${
+        showSearch
+          ? "opacity-100 scale-100"
+          : "opacity-0 scale-95 pointer-events-none"
+      }
+
+      /* MOBILE */
+      fixed left-1/2 -translate-x-1/2 top-16 z-[60]
+
+      /* DESKTOP */
+      md:absolute md:left-auto md:translate-x-0 md:right-8 md:top-1/2 md:-translate-y-1/2
+    `}
+  >
+    <input
+      type="text"
+      placeholder="Search..."
+      autoFocus
+      value={searchTerm}
+      onChange={(e) => {
+        setSearchTerm(e.target.value);
+        navigate("/products");
+      }}
+      className="
+        w-[90vw] sm:w-72
+        bg-[#1e1e1e]
+        text-white
+        border border-red-600
+        rounded-md
+        px-4 py-2
+        outline-none
+      "
+    />
+
+    {/* SEARCH RESULTS */}
+    {searchTerm && filteredProducts.length > 0 && (
+      <div className="absolute left-0 mt-2 w-full bg-[#1a1a1a] border border-gray-700 rounded-md shadow-lg max-h-64 overflow-y-auto">
+        {filteredProducts.map((product) => (
           <div
-            className={`
-              absolute right-8 top-1/2 -translate-y-1/2
-              transition-all duration-300
-              ${showSearch ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"}
-            `}
+            key={product._id}
+            className="flex items-center gap-3 px-3 py-2 hover:bg-[#2a2a2a] cursor-pointer"
+            onClick={() => {
+              navigate(`/product-details/${product._id}`);
+              setShowSearch(false);
+              setSearchTerm("");
+            }}
           >
-            <input
-              type="text"
-              placeholder="Search..."
-              autoFocus
-              value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                navigate("/products");
-              }}
-              className="
-                w-72
-                bg-[#1e1e1e]
-                text-white
-                border border-red-600
-                rounded-md
-                px-4 py-2
-                outline-none
-              "
+            <img
+              src={product.images[0]} 
+              alt={product.title}
+              className="w-10 h-10 object-contain"
             />
-
-            {/* SEARCH RESULTS */}
-            {searchTerm && filteredProducts.length > 0 && (
-              <div className="absolute left-0 mt-2 w-full bg-[#1a1a1a] border border-gray-700 rounded-md shadow-lg max-h-64 overflow-y-auto">
-                {filteredProducts.map((product) => (
-                  <div
-                    key={product.id}
-                    className="flex items-center gap-3 px-3 py-2 hover:bg-[#2a2a2a] cursor-pointer"
-                    onClick={() => {
-                      navigate(`/product-details/${product.id}`);
-                      setShowSearch(false);
-                      setSearchTerm("");
-                    }}
-                  >
-                    <img
-                      src={product.images[0]}
-                      alt={product.title}
-                      className="w-10 h-10 object-contain"
-                    />
-                    <div className="flex-1">
-                      <p className="text-sm text-white">{product.title}</p>
-                    </div>
-                    <p className="text-red-500 text-sm font-semibold">
-                      ₹{product.finalPrice}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="flex-1">
+              <p className="text-sm text-white">{product.title}</p>
+            </div>
+            <p className="text-red-500 text-sm font-semibold">
+              ₹{product.finalPrice}
+            </p>
           </div>
-        </div>
+        ))}
+      </div>
+    )}
+  </div>
+</div>
+
+
 
         {/* CART */}
         <Link to="/cart" className="relative">
