@@ -14,7 +14,6 @@ function Home() {
       <HeroSlider />
       <FeaturedProducts />
       <TopProducts />
-      <ProductDetails/>
     </div>
   );
 }

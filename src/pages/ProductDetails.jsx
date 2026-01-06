@@ -17,20 +17,10 @@ const [activeTab, setActiveTab] = useState("specifications");
 const [mainImage, setMainImage] = useState("");
 const navigate = useNavigate();
 const { products, loading } = useContext(ProductContext);
-if (!id) return null;
-
-if (loading) {
+if (!id) {
   return (
     <div className="min-h-screen bg-[#121212] text-gray-400 flex items-center justify-center">
-      Loading product details...
-    </div>
-  );
-}
-
-if (!product) {
-  return (
-    <div className="min-h-screen bg-[#121212] text-gray-400 flex items-center justify-center">
-      Product not found
+      Invalid product
     </div>
   );
 }
@@ -58,7 +48,13 @@ useEffect(() => {
     setRelatedProducts(related);
   }, [product, products]);
 
-  
+  if (loading || !product) {
+    return (
+      <div className="min-h-screen bg-[#121212] text-gray-400 flex items-center justify-center">
+        Loading product details...
+      </div>
+    );
+  }
 
 
 
