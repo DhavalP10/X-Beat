@@ -23,19 +23,42 @@ const Navbar = () => {
 
   const searchRef = useRef(null);
   const profileRef = useRef(null);
+  const [searchResults, setSearchResults] = useState([]);
 
   const navigate = useNavigate();
   const { products } = useContext(ProductContext);
+
+  const { fetchProducts } = useContext(ProductContext);
+
+useEffect(() => {
+  if (!searchTerm.trim()) {
+    setSearchResults([]);
+    return;
+  }
+
+  const loadSearchResults = async () => {
+    try {
+      const data = await fetchProducts({ search: searchTerm });
+      setSearchResults(data || []);
+    } catch (err) {
+      console.error("Search failed", err);
+      setSearchResults([]);
+    }
+  };
+
+  loadSearchResults();
+}, [searchTerm, fetchProducts]);
+
   
   
 
-  const filteredProducts = products
-    .filter(
-      (p) =>
-        p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.category.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-    .slice(0, 6);
+  // const filteredProducts = products
+  //   .filter(
+  //     (p) =>
+  //       p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //       p.category.toLowerCase().includes(searchTerm.toLowerCase())
+  //   )
+  //   .slice(0, 6);
 
   // CLOSE ON OUTSIDE CLICK
   useEffect(() => {
@@ -113,9 +136,9 @@ const Navbar = () => {
     />
 
     {/* SEARCH RESULTS */}
-    {searchTerm && filteredProducts.length > 0 && (
+    {searchTerm && searchResults.length > 0 && (
       <div className="absolute left-0 mt-2 w-full bg-[#1a1a1a] border border-gray-700 rounded-md shadow-lg max-h-64 overflow-y-auto">
-        {filteredProducts.map((product) => (
+        {searchResults.map((product) => (
           <div
             key={product._id}
             className="flex items-center gap-3 px-3 py-2 hover:bg-[#2a2a2a] cursor-pointer"

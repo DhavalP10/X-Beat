@@ -6,43 +6,47 @@ import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { ProductContext } from "../context/ProductContext";
 
-
-
 const ProductDetails = () => {
   const { id } = useParams(); // ✅ get product id from URL
-const [product, setProduct] = useState(null);
-const [relatedProducts, setRelatedProducts] = useState([]);
-const { addToCart } = useContext(CartContext);
-const [activeTab, setActiveTab] = useState("specifications");
-const [mainImage, setMainImage] = useState("");
-const navigate = useNavigate();
-const { products, loading } = useContext(ProductContext);
-if (!id) {
-  return (
-    <div className="min-h-screen bg-[#121212] text-gray-400 flex items-center justify-center">
-      Invalid product
-    </div>
-  );
-}
+  const [product, setProduct] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const { addToCart } = useContext(CartContext);
+  const [activeTab, setActiveTab] = useState("specifications");
+  const [mainImage, setMainImage] = useState("");
+  const navigate = useNavigate();
+  const { fetchProductById, products, loading } = useContext(ProductContext);
 
-useEffect(() => {
-    if (!products.length || !id) return;
+  if (!id) {
+    return (
+      <div className="min-h-screen bg-[#121212] text-gray-400 flex items-center justify-center">
+        Invalid product
+      </div>
+    );
+  }
 
-    const found = products.find((item) => item._id === id);
-    if (found) {
-      setProduct(found);
-      setMainImage(found.images?.[0] || "");
-    }
-  }, [products, id]);
+  useEffect(() => {
+    if (!id) return;
 
-  // 🔹 FIND RELATED PRODUCTS
+    const loadProduct = async () => {
+      try {
+        const data = await fetchProductById(id); // ✅ backend
+        if (data) {
+          setProduct(data);
+          setMainImage(data.images?.[0] || "");
+        }
+      } catch (err) {
+        console.error("Failed to fetch product", err);
+      }
+    };
+
+    loadProduct();
+  }, [id, fetchProductById]);
+
   useEffect(() => {
     if (!product || !products.length) return;
 
     const related = products.filter(
-      (item) =>
-        item.category === product.category &&
-        item._id !== product._id
+      (item) => item.category === product.category && item._id !== product._id
     );
 
     setRelatedProducts(related);
@@ -56,9 +60,6 @@ useEffect(() => {
     );
   }
 
-
-
-
   const savings = product.originalPrice - product.finalPrice;
   const discountPercent = Math.round((savings / product.originalPrice) * 100);
 
@@ -66,7 +67,7 @@ useEffect(() => {
     <>
       {/* PRODUCT TOP SECTION */}
       <div className="min-h-screen bg-[#121212] text-white px-4 md:px-10 py-10 pt-20 md:pt-25 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
-        {/* LEFT IMAGES */}  
+        {/* LEFT IMAGES */}
         <div className="flex flex-col md:flex-row gap-4 md:gap-6">
           <div className="flex md:flex-col gap-4 order-2 md:order-1">
             {product.images.map((img, index) => (
@@ -91,7 +92,9 @@ useEffect(() => {
 
         {/* RIGHT DETAILS */}
         <div className="order-3">
-          <h1 className="text-2xl md:text-4xl font-bold mb-2">{product.title}</h1>
+          <h1 className="text-2xl md:text-4xl font-bold mb-2">
+            {product.title}
+          </h1>
           <p className="text-gray-400 mb-4">{product.info}</p>
 
           <div className="flex items-center gap-2 mb-6">
@@ -177,54 +180,51 @@ useEffect(() => {
         {/* CONTENT */}
         <div className="mt-10 bg-[#0f0f0f] rounded-xl p-4 md:p-10 max-w-5xl mx-auto shadow-lg">
           {activeTab === "specifications" && (
-  <div className="space-y-4 text-sm md:text-lg">
+            <div className="space-y-4 text-sm md:text-lg">
+              {/* ROW */}
+              <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
+                <span>Brand</span>
+                <span className="font-semibold text-white md:text-right">
+                  {product.brand}
+                </span>
+              </div>
 
-    {/* ROW */}
-    <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
-      <span>Brand</span>
-      <span className="font-semibold text-white md:text-right">
-        {product.brand}
-      </span>
-    </div>
+              <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
+                <span>Model</span>
+                <span className="font-semibold text-white md:text-right">
+                  {product.title}
+                </span>
+              </div>
 
-    <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
-      <span>Model</span>
-      <span className="font-semibold text-white md:text-right">
-        {product.title}
-      </span>
-    </div>
+              <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
+                <span>Generic Name</span>
+                <span className="font-semibold text-white md:text-right">
+                  {product.category}
+                </span>
+              </div>
 
-    <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
-      <span>Generic Name</span>
-      <span className="font-semibold text-white md:text-right">
-        {product.category}
-      </span>
-    </div>
+              <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
+                <span>Headphone Type</span>
+                <span className="font-semibold text-white md:text-right">
+                  {product.type}
+                </span>
+              </div>
 
-    <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
-      <span>Headphone Type</span>
-      <span className="font-semibold text-white md:text-right">
-        {product.type}
-      </span>
-    </div>
+              <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
+                <span>Connectivity</span>
+                <span className="font-semibold text-white md:text-right">
+                  {product.connectivity}
+                </span>
+              </div>
 
-    <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
-      <span>Connectivity</span>
-      <span className="font-semibold text-white md:text-right">
-        {product.connectivity}
-      </span>
-    </div>
-
-    <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
-      <span>Microphone</span>
-      <span className="font-semibold text-white md:text-right">
-        Yes
-      </span>
-    </div>
-
-  </div>
-)}
-
+              <div className="flex justify-between md:grid md:grid-cols-2 text-gray-300">
+                <span>Microphone</span>
+                <span className="font-semibold text-white md:text-right">
+                  Yes
+                </span>
+              </div>
+            </div>
+          )}
 
           {activeTab === "overview" && (
             <div className="text-gray-300 space-y-4 text-sm md:text-base">
@@ -269,74 +269,71 @@ useEffect(() => {
           )}
         </div>
       </div>
-      
 
       {/* TAB CONTENT (UNCHANGED FROM YOU) */}
       {/* your existing specifications / overview / reviews code stays SAME */}
 
       {/* ================= RELATED PRODUCTS ================= */}
-<div className="bg-[#121212] px-4 md:px-10 py-10 md:py-20">
-  <h2 className="text-xl md:text-2xl font-bold text-white mb-8">
-    Related Products
-  </h2>
+      <div className="bg-[#121212] px-4 md:px-10 py-10 md:py-20">
+        <h2 className="text-xl md:text-2xl font-bold text-white mb-8">
+          Related Products
+        </h2>
 
-  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-    {relatedProducts.map((item) => (
-      <div
-        key={item._id}
-        onClick={() => navigate(`/product-details/${item._id}`)}
-        className="border border-gray-600 rounded-lg p-4 bg-[#181818] hover:scale-[1.02] transition cursor-pointer"
-      >
-        {/* IMAGE */}
-        <div className="h-32 md:h-48 flex items-center justify-center">
-          <img
-            src={item.images[0]}
-            alt={item.title}
-            className="h-full object-contain"
-          />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {relatedProducts.map((item) => (
+            <div
+              key={item._id}
+              onClick={() => navigate(`/product-details/${item._id}`)}
+              className="border border-gray-600 rounded-lg p-4 bg-[#181818] hover:scale-[1.02] transition cursor-pointer"
+            >
+              {/* IMAGE */}
+              <div className="h-32 md:h-48 flex items-center justify-center">
+                <img
+                  src={item.images[0]}
+                  alt={item.title}
+                  className="h-full object-contain"
+                />
+              </div>
+
+              {/* RATING */}
+              <div className="flex gap-1 mt-3 text-red-500">
+                {"★".repeat(item.rateCount)}
+              </div>
+
+              {/* TITLE */}
+              <h3 className="text-base md:text-lg font-semibold mt-2 text-white">
+                {item.title}
+              </h3>
+
+              {/* INFO */}
+              <p className="text-sm text-gray-400">{item.info}</p>
+
+              <hr className="my-3 border-gray-700" />
+
+              {/* PRICE */}
+              <div className="flex items-center gap-3">
+                <span className="text-lg md:text-xl font-bold text-white">
+                  ₹{item.finalPrice.toLocaleString("en-IN")}
+                </span>
+                <span className="line-through text-gray-500">
+                  ₹{item.originalPrice.toLocaleString("en-IN")}
+                </span>
+              </div>
+
+              {/* BUTTON */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // prevent card click redirect
+                  addToCart(item); // add this related product to cart
+                }}
+                className="w-full mt-4 bg-red-600 py-2 rounded hover:bg-red-700 transition text-white"
+              >
+                Add to cart
+              </button>
+            </div>
+          ))}
         </div>
-
-        {/* RATING */}
-        <div className="flex gap-1 mt-3 text-red-500">
-          {"★".repeat(item.rateCount)}
-        </div>
-
-        {/* TITLE */}
-        <h3 className="text-base md:text-lg font-semibold mt-2 text-white">
-          {item.title}
-        </h3>
-
-        {/* INFO */}
-        <p className="text-sm text-gray-400">{item.info}</p>
-
-        <hr className="my-3 border-gray-700" />
-
-        {/* PRICE */}
-        <div className="flex items-center gap-3">
-          <span className="text-lg md:text-xl font-bold text-white">
-            ₹{item.finalPrice.toLocaleString("en-IN")}
-          </span>
-          <span className="line-through text-gray-500">
-            ₹{item.originalPrice.toLocaleString("en-IN")}
-          </span>
-        </div>
-
-        {/* BUTTON */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation(); // prevent card click redirect
-            addToCart(item);     // add this related product to cart
-          }}
-          className="w-full mt-4 bg-red-600 py-2 rounded hover:bg-red-700 transition text-white"
-        >
-          Add to cart
-        </button>
-
       </div>
-    ))}
-  </div>
-</div>
-
     </>
   );
 };

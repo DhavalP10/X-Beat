@@ -9,6 +9,14 @@
   opacity: 0.5;
 }
 
+.featured-swiper {
+  padding-bottom: 60px;
+}
+.featured-swiper .swiper-pagination {
+  bottom: 0;
+}
+
+
 .featured-swiper .swiper-pagination-bullet-active {
   background-color: red;
   opacity: 1;

@@ -1,24 +1,29 @@
 import { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { ProductContext } from "../context/ProductContext";
-// import productapi from "../productapi";
-// import ProductDetails from "../pages/ProductDetails";
 
 function HeroSlider() {
   const [slides, setSlides] = useState([]);
-  // const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [current, setCurrent] = useState(0);
-  const { products, loading } = useContext(ProductContext);
+  const { fetchHeroProducts } = useContext(ProductContext);
   
 
-  useEffect(() => {
-    if (products.length > 0) {
-      const heroProducts = products.filter(
-        (item) => item.tag === "hero-product"
-      );
-      setSlides(heroProducts);
-    }
-  }, [products]);
+
+    useEffect(() => {
+      const loadFeatured = async () => {
+        try {
+          const data = await fetchHeroProducts();
+          setSlides(data);
+        } catch (err) {
+          console.error("Failed to load hero products");
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      loadFeatured();
+    }, [fetchHeroProducts]);
 
   useEffect(() => {
     if (slides.length === 0) return;

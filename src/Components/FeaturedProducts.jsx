@@ -5,30 +5,36 @@ import { Link } from "react-router-dom";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/effect-coverflow";
-import "./swiperCustom.css"; // for red dots
+import "./swiperCustom.css";
 import { ProductContext } from "../context/ProductContext";
 
-
 function FeaturedProducts() {
+  const { fetchFeaturedProducts } = useContext(ProductContext);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
+  useEffect(() => {
+    const loadFeatured = async () => {
+      try {
+        const data = await fetchFeaturedProducts();
+        setFeaturedProducts(data);
+      } catch (err) {
+        console.error("Failed to load featured products");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-const { products, loading } = useContext(ProductContext);
-const [featuredProducts, setFeaturedProducts] = useState([]);
+    loadFeatured();
+  }, [fetchFeaturedProducts]);
 
-useEffect(() => {
-  if (products.length > 0) {
-    const featured = products.filter(
-      (item) => item.tag === "featured-product"
+  if (loading) {
+    return (
+      <p className="text-center text-gray-400">
+        Loading Featured Data...
+      </p>
     );
-    setFeaturedProducts(featured);
   }
-}, [products]);
-
-if (loading) {
-    return <p className="text-center text-gray-400">Loading Featured Data...</p>;
-  }
-
-
 
   return (
     <div className="bg-[#121212] py-10">
@@ -59,19 +65,27 @@ if (loading) {
         spaceBetween={20}
         className="featured-swiper"
       >
-        {featuredProducts.map((products,index) => (
-          <SwiperSlide key={index}>
+        {featuredProducts.map((product) => (
+          <SwiperSlide key={product._id}>
             <div className="text-center text-gray-400">
-              <p className="text-lg font-semibold mb-4">{products.title}</p>
-              <Link to={`/product-details/${products._id}`}>
-              <img
-                src={products.images[0]}
-                className="h-80 w-80 object-contain mx-auto cursor-pointer transition-transform duration-500"
-              /></Link>
+              <p className="text-lg font-semibold mb-4">
+                {product.title}
+              </p>
+
+              <Link to={`/product-details/${product._id}`}>
+                <img
+                  src={product.images?.[0]}
+                  alt={product.title}
+                  className="h-80 w-80 object-contain mx-auto cursor-pointer transition-transform duration-500"
+                />
+              </Link>
+
               <div className="flex justify-center gap-6 mt-4">
-                <p className="text-gray-400 font-bold text-2xl">₹{products.finalPrice.toLocaleString("en-IN")}</p>
-                <p className="text-gray-400 font-bold text-2xl pb-15 line-through">
-                  ₹{products.originalPrice.toLocaleString("en-IN")}
+                <p className="text-gray-400 font-bold text-2xl">
+                  ₹{product.finalPrice.toLocaleString("en-IN")}
+                </p>
+                <p className="text-gray-400 font-bold text-2xl line-through">
+                  ₹{product.originalPrice.toLocaleString("en-IN")}
                 </p>
               </div>
             </div>

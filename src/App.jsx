@@ -1,4 +1,4 @@
-import { useState } from 'react'
+// import { useState } from 'react'
 import './App.css'
 import Home from './Components/Home'
 import FeaturedProducts from './Components/FeaturedProducts'
@@ -10,9 +10,7 @@ import ProductDetails from "./pages/ProductDetails";
 import ScrollToTop from "./Components/ScrollToTop";
 import Cart from "./Components/Cart";
 import Notification from "./Components/Notification";
-import AllProducts from './pages/AllProducts'
-// import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-// import ProductDetails from './pages/ProductDetails'
+import AllProducts from './pages/AllProducts';
 
 function App() {
 

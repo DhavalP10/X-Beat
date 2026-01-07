@@ -202,7 +202,7 @@ const { products, loading } = useContext(ProductContext);
 
         <input
           type="range"
-          min="0"
+          min="449"
           max="20000"
           value={priceRange}
           onChange={(e) => setPriceRange(Number(e.target.value))}
