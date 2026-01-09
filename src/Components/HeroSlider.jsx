@@ -6,14 +6,14 @@ function HeroSlider() {
   const [slides, setSlides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [current, setCurrent] = useState(0);
-  const { fetchHeroProducts } = useContext(ProductContext);
+  const { fetchProducts } = useContext(ProductContext);
   
 
 
     useEffect(() => {
       const loadFeatured = async () => {
         try {
-          const data = await fetchHeroProducts();
+          const data = await fetchProducts({ tag:"hero-product"});
           setSlides(data);
         } catch (err) {
           console.error("Failed to load hero products");
@@ -23,7 +23,7 @@ function HeroSlider() {
       };
   
       loadFeatured();
-    }, [fetchHeroProducts]);
+    }, []);
 
   useEffect(() => {
     if (slides.length === 0) return;

@@ -14,7 +14,8 @@ const ProductDetails = () => {
   const [activeTab, setActiveTab] = useState("specifications");
   const [mainImage, setMainImage] = useState("");
   const navigate = useNavigate();
-  const { fetchProductById, products, loading } = useContext(ProductContext);
+  const [loading, setLoading] = useState(true);
+  const { fetchProductById, fetchProducts } = useContext(ProductContext);
 
   if (!id) {
     return (
@@ -24,33 +25,48 @@ const ProductDetails = () => {
     );
   }
 
-  useEffect(() => {
+useEffect(() => {
     if (!id) return;
 
     const loadProduct = async () => {
+      setLoading(true);
       try {
-        const data = await fetchProductById(id); // ✅ backend
+        const data = await fetchProductById(id);
         if (data) {
           setProduct(data);
           setMainImage(data.images?.[0] || "");
         }
       } catch (err) {
         console.error("Failed to fetch product", err);
+      } finally {
+        setLoading(false);
       }
     };
 
     loadProduct();
-  }, [id, fetchProductById]);
+  }, [id]);
 
   useEffect(() => {
-    if (!product || !products.length) return;
+    if (!product) return;
 
-    const related = products.filter(
-      (item) => item.category === product.category && item._id !== product._id
-    );
+    const loadRelated = async () => {
+      try {
+        const data = await fetchProducts({
+          category: product.category,
+        });
 
-    setRelatedProducts(related);
-  }, [product, products]);
+        const filtered = data.filter(
+          (item) => item._id !== product._id
+        );
+
+        setRelatedProducts(filtered);
+      } catch (err) {
+        console.error("Failed to load related products", err);
+      }
+    };
+
+    loadRelated();
+  }, [product]);
 
   if (loading || !product) {
     return (
@@ -72,7 +88,7 @@ const ProductDetails = () => {
           <div className="flex md:flex-col gap-4 order-2 md:order-1">
             {product.images.map((img, index) => (
               <img
-                key={index}
+              key={index}
                 src={img}
                 alt={product.title}
                 onClick={() => setMainImage(img)}

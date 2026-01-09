@@ -10,7 +10,7 @@ function Home() {
       {/* Spacer for fixed navbar */}
       <div className="h-16"></div>
 
-      {/* Hero Slider */}
+
       <HeroSlider />
       <FeaturedProducts />
       <TopProducts />

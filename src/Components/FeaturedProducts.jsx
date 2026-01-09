@@ -9,24 +9,24 @@ import "./swiperCustom.css";
 import { ProductContext } from "../context/ProductContext";
 
 function FeaturedProducts() {
-  const { fetchFeaturedProducts } = useContext(ProductContext);
+  const { fetchProducts } = useContext(ProductContext);
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const loadFeatured = async () => {
-      try {
-        const data = await fetchFeaturedProducts();
-        setFeaturedProducts(data);
-      } catch (err) {
-        console.error("Failed to load featured products");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadFeatured();
-  }, [fetchFeaturedProducts]);
+      const loadFeatured = async () => {
+        try {
+          const data = await fetchProducts({ tag:"featured-product"});
+          setFeaturedProducts(data);
+        } catch (err) {
+          console.error("Failed to load featured products");
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      loadFeatured();
+    }, []);
 
   if (loading) {
     return (

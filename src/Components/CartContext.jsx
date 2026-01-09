@@ -5,7 +5,7 @@ export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
-  console.log("cart:",cartItems);
+  // console.log("cart:",cartItems);
   
   const [notification, setNotification] = useState(null);
 
@@ -29,7 +29,7 @@ export const CartProvider = ({ children }) => {
     setNotification(`${product.title} added to cart!`);
     setTimeout(() => setNotification(null), 3000); // Hide after 3 seconds
 
-    console.log("Added to cart:", product); // ✅ check console
+    // console.log("Added to cart:", product); 
   };
 
   const increaseQuantity = (productId) => {

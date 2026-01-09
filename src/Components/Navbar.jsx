@@ -49,17 +49,6 @@ useEffect(() => {
   loadSearchResults();
 }, [searchTerm, fetchProducts]);
 
-  
-  
-
-  // const filteredProducts = products
-  //   .filter(
-  //     (p) =>
-  //       p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-  //       p.category.toLowerCase().includes(searchTerm.toLowerCase())
-  //   )
-  //   .slice(0, 6);
-
   // CLOSE ON OUTSIDE CLICK
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -88,9 +77,7 @@ useEffect(() => {
       {/* RIGHT SIDE */}
       <div className="flex items-center gap-4 md:gap-15">
 
-        {/* SEARCH */}
-        {/* SEARCH INPUT (FIXED ON MOBILE, ABSOLUTE ON DESKTOP) */}
-{/* SEARCH */}
+
 <div className="relative flex items-center" ref={searchRef}>
   {/* SEARCH ICON */}
   <FaSearch

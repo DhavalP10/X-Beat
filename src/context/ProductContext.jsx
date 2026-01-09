@@ -1,41 +1,26 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import productApi from "../productapi";
 
 export const ProductContext = createContext();
 
 const ProductProvider = ({ children }) => {
-  const [products, setProducts] = useState([]);     // ✅ ALWAYS array
-  const [loading, setLoading] = useState(true);     // ✅ global loading
+  const [loading, setLoading] = useState(false); // ✅ global loading only
 
-  /* ===================== FETCH ALL PRODUCTS ===================== */
-  useEffect(() => {
-    const loadProducts = async () => {
-      try {
-        const data = await productApi.getProducts();
-        setProducts(data || []);
-      } catch (err) {
-        console.error("Failed to load products", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadProducts();
-  }, []);
-
-  /* ===================== HELPERS ===================== */
+  /* ===================== GENERIC FETCH ===================== */
   const fetchProducts = async (filters = {}) => {
-    return await productApi.getProducts(filters);
+    try {
+      setLoading(true);
+      const data = await productApi.getProducts(filters); // ✅ accepts filters
+      return data || [];
+    } catch (err) {
+      console.error("Failed to load products", err);
+      return [];
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const fetchHeroProducts = async () => {
-    return await productApi.getProducts({ tag: "hero-product" });
-  };
-
-  const fetchFeaturedProducts = async () => {
-    return await productApi.getProducts({ tag: "featured-product" });
-  };
-
+  /* ===================== FETCH BY ID ===================== */
   const fetchProductById = async (id) => {
     if (!id) return null;
     return await productApi.getProductById(id);
@@ -44,12 +29,9 @@ const ProductProvider = ({ children }) => {
   return (
     <ProductContext.Provider
       value={{
-        products,
-        loading,
-        fetchProducts,
-        fetchHeroProducts,
-        fetchFeaturedProducts,
+        fetchProducts,   // ✅ pages call this
         fetchProductById,
+        loading,
       }}
     >
       {children}

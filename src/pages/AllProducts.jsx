@@ -6,98 +6,132 @@ import { ProductContext } from "../context/ProductContext";
 
 
 const AllProducts = () => {
-  const [sortBy, setSortBy] = useState('Latest');
+  const [sortBy, setSortBy] = useState("Latest");
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [priceRange, setPriceRange] = useState(20000);
+  const [products, setProducts] = useState([]); // ✅ LOCAL
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const { addToCart } = useContext(CartContext);
   const { searchTerm } = useContext(SearchContext);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-const [filteredProducts, setFilteredProducts] = useState([]);
-const { products, loading } = useContext(ProductContext);
+  const { fetchProducts } = useContext(ProductContext);
 
 
 
   // Chunk array function
-  const chunkArray = (array, size) => {
-    let result = [];
-    for (let i = 0; i < array.length; i += size) {
-      result.push(array.slice(i, i + size));
-    }
-    return result;
-  };
+  
 
   
 
   // 🔹 FILTER + SORT LOGIC
   useEffect(() => {
-    if (!products.length) {
-      setFilteredProducts([]);
-      return;
+  const loadProducts = async () => {
+    setLoading(true);
+    try {
+      const filters = {};
+
+      if (selectedBrands.length > 0) {
+        filters.brand = selectedBrands.join(","); // ✅ IMPORTANT
+      }
+
+      if (selectedCategories.length > 0) {
+        filters.category = selectedCategories.join(","); // ✅ IMPORTANT
+      }
+
+      const data = await fetchProducts(filters);
+      setProducts(data || []);
+    } catch (err) {
+      console.error("Failed to load products", err);
+    } finally {
+      setLoading(false);
     }
+  };
 
-    let filtered = products.filter((product) => {
-      const brandMatch =
-        selectedBrands.length === 0 ||
-        selectedBrands.includes(product.brand);
+  loadProducts();
+}, [selectedBrands, selectedCategories]);
 
-      const categoryMatch =
-        selectedCategories.length === 0 ||
-        selectedCategories.includes(product.category);
 
-      const priceMatch = product.finalPrice <= priceRange;
+useEffect(() => {
+  let filtered = products.filter((product) => {
+    const brandMatch =
+      selectedBrands.length === 0 ||
+      selectedBrands.includes(product.brand);
 
-      const searchMatch =
-        searchTerm === "" ||
-        searchTerm
-          .toLowerCase()
-          .split(/\s+/)
-          .every((word) =>
-            (
-              product.title +
-              product.brand +
-              product.info +
-              product.category
-            )
-              .toLowerCase()
-              .includes(word)
-          );
+    const categoryMatch =
+      selectedCategories.length === 0 ||
+      selectedCategories.includes(product.category);
 
-      return brandMatch && categoryMatch && priceMatch && searchMatch;
-    });
+    const priceMatch =
+      product.finalPrice <= priceRange;
 
-    switch (sortBy) {
-      case "Latest":
-        filtered = [...filtered].sort((a, b) => b.id - a.id);
-        break;
-      case "Top Rated":
-        filtered = [...filtered].sort(
-          (a, b) => b.rateCount - a.rateCount
+    const searchMatch =
+      !searchTerm ||
+      searchTerm
+        .toLowerCase()
+        .split(/\s+/)
+        .every((word) =>
+          (
+            product.title +
+            product.brand +
+            product.info +
+            product.category
+          )
+            .toLowerCase()
+            .includes(word)
         );
-        break;
-      case "Price (Lowest First)":
-        filtered = [...filtered].sort(
-          (a, b) => a.finalPrice - b.finalPrice
-        );
-        break;
-      case "Price (Highest First)":
-        filtered = [...filtered].sort(
-          (a, b) => b.finalPrice - a.finalPrice
-        );
-        break;
-      default:
-        break;
-    }
 
-    setFilteredProducts(filtered);
-  }, [
-    products,
-    sortBy,
-    selectedBrands,
-    selectedCategories,
-    priceRange,
-    searchTerm,
-  ]);
+    return brandMatch && categoryMatch && priceMatch && searchMatch;
+  });
+
+  switch (sortBy) {
+    case "Latest":
+      filtered.sort((a, b) => b.id - a.id);
+      break;
+    case "Top Rated":
+      filtered.sort((a, b) => b.rateCount - a.rateCount);
+      break;
+    case "Price (Lowest First)":
+      filtered.sort((a, b) => a.finalPrice - b.finalPrice);
+      break;
+    case "Price (Highest First)":
+      filtered.sort((a, b) => b.finalPrice - a.finalPrice);
+      break;
+    default:
+      break;
+  }
+
+  setFilteredProducts(filtered);
+}, [
+  products,
+  selectedBrands,
+  selectedCategories,
+  priceRange,
+  sortBy,
+  searchTerm,
+]);
+
+
+
+
+const handleBrandChange = (brand) => {
+  setSelectedBrands((prev) =>
+    prev.includes(brand)
+      ? prev.filter((b) => b !== brand)
+      : [...prev, brand]
+  );
+};
+
+const handleCategoryChange = (category) => {
+  setSelectedCategories((prev) =>
+    prev.includes(category)
+      ? prev.filter((c) => c !== category)
+      : [...prev, category]
+  );
+};
+
 
   if (loading) {
     return (
@@ -108,19 +142,6 @@ const { products, loading } = useContext(ProductContext);
   }
 
 
-  const handleBrandChange = (brand) => {
-    setSelectedBrands(prev =>
-      prev.includes(brand) ? prev.filter(b => b !== brand) : [...prev, brand]
-    );
-  };
-
-  const handleCategoryChange = (category) => {
-    setSelectedCategories(prev =>
-      prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]
-    );
-  };
-
-  const rows = chunkArray(filteredProducts, 4);
 
   return (
     <div className="bg-[#121212] min-h-screen pt-20 flex flex-col md:flex-row">
